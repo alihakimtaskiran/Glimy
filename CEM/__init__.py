@@ -1,9 +1,7 @@
 import platform
 import os
 import numpy as np
-import CEM.geo2D
-import CEM.geo3D
-
+from . import geo2D, geo3D
 oss=platform.system()
 
 if oss=="Linux":
@@ -40,7 +38,4 @@ class Grid(object):
         self.__deltaS=deltaS
         self.__deltaT=deltaT
         self.__dim=dim
-        
-        
-        
-        
+        self.__objects=[]
