@@ -1,3 +1,6 @@
+"""
+2D Geometry processor
+"""
 import numpy as np
 class Plane(object):
     def __init__(self, Basis_Vectors, normalize=True):
