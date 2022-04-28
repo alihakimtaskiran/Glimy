@@ -1,3 +1,6 @@
+"""
+2D Geometry processor
+"""
 import numpy as np
 class RecPrism(object):
     def __init__(self, A, B, C, n):
