@@ -1,9 +1,9 @@
 """
-2D Geometry processor
+3D Geometry processor
 """
 import numpy as np
 class RecPrism(object):
-    def __init__(self, A, B, C, n):
+    def __init__(self, A, B, n):
         if not type(A) in {tuple, list, np.array}:
             raise TypeError("A must an array, tuple or list")
         if not len(A)==3:
@@ -13,16 +13,12 @@ class RecPrism(object):
             raise TypeError("B must an array, tuple or list")
         if not len(B)==3:
             raise ValueError("B must be 3D")
-        
-        if not type(C) in {tuple, list, np.array}:
-            raise TypeError("C must an array, tuple or list")
-        if not len(C)==3:
-            raise ValueError("C must be 3D")
+
         if not type(n) in {complex, float, int}:
             raise TypeError("Refractive index must be a number")
+            
         self.__A=np.array(A)
         self.__B=np.array(B)
-        self.__C=np.array(C)
         self.__n=n
     
     def isIn(self, P):
