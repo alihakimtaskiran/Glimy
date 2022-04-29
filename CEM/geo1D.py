@@ -1,7 +1,8 @@
 """
 1D Geometry Identifier
 """
-class Line(class):
+import numpy as np
+class Line(object):
     def __init__(self, Origin, Pointing, n):
         if not type(Origin) in {tuple, list, np.array}:
             raise TypeError("Origin must an array, tuple or list")
@@ -20,4 +21,4 @@ class Line(class):
         self.__Pointing=tuple(Pointing)
         self.__n=n
     def __repr__(self):
-        return f"LINE\n{self.__Origin}\n{self.__Pointing}"
+        return f"LINE\n{self.__Origin}\n{self.__Pointing}\nself.__n"
