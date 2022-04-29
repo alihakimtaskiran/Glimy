@@ -20,7 +20,7 @@ class RecPrism(object):
         self.__A=np.array(A)
         self.__B=np.array(B)
         self.__n=n
-    
+
     def isIn(self, P):
         
         if not type(P) in {tuple , list, np.array}:
@@ -32,6 +32,9 @@ class RecPrism(object):
             if not ((self.__A[i]<P[i]<self.__B[i]) ^ (self.__B[i]<P[i]<self.__A[i])):
                 return False
         return True
+
+    def __repr__(self):
+        return f"RECTPRISM\n{tuple(self.__A)}\n{tuple(self.__B)}\n{self.__n}"    
     
 class Sphere(object):
     def __init__(self, C, r, n):
@@ -47,6 +50,7 @@ class Sphere(object):
         self.__C=np.array(C)
         self.__r=float(r)
         self.__n=n
+    
     def isIn(self, P):
          if not len(P)==3:
              raise ValueError("Point must be 3D")
@@ -57,6 +61,11 @@ class Sphere(object):
          else:
              return False
          
+    def __repr__(self):
+        return f"SPHERE\n{tuple(self.__C)}\n{self.__r}\n{self.__n}"
+        
+        
+        
 class Cylinder(object):
     def __init__(self, CB, r, h, n):
         if not type(CB) in {tuple, list, np.array}:
@@ -88,3 +97,5 @@ class Cylinder(object):
              return True
          else:
              False
+    def __repr__(self):
+        return f"CYLINDER|n{tuple(self.__CB)}\n{self.__r, self.__h}\n{self.__n}"

@@ -3,7 +3,11 @@
 """
 import numpy as np
 class Plane(object):
-    def __init__(self, Basis_Vectors, normalize=True):
+    def __init__(self, Origin, Basis_Vectors, normalize=True):
+        if not type(Origin) in {tuple, list, np.array}:
+            raise TypeError("A must an array, tuple or list")
+
+        
         if not type(Basis_Vectors) in {tuple, list,}:
             raise TypeError("Basis_Vectors must  be a tuple or list")
             
@@ -21,8 +25,8 @@ class Plane(object):
             self.__e1=self.__normalize(Basis_Vectors[0])
             self.__e2=self.__normalize(Basis_Vectors[1])
         else:
-            self.__e1=self.Basis_Vectors[0]
-            self.__e2=self.Basis_Vectors[1]
+            self.__e1=Basis_Vectors[0]
+            self.__e2=Basis_Vectors[1]
         
         self.__objects=[]
     def __normalize(self, vec):
@@ -53,7 +57,8 @@ class Rectangle(object):
         self.__A=np.array(A)
         self.__B=np.array(B)
         self.__n=n
-        
+    def __repr__(self):
+        return f"RECTANGLE\n{tuple(self.__A)}\n{tuple(self.__B)}\n{self.__n}" 
     
     def isIn(self, P):
         if not type(P) in {tuple , list, np.array}:
@@ -90,3 +95,6 @@ class Circle(object):
              return True
          else:
              return False
+         
+    def __repr__(self):
+        return f"CIRCLE\n{tuple(self.__C)}\n{self.__r}\n{self.__n}"
