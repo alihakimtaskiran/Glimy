@@ -39,7 +39,8 @@ class Plane(object):
         else:
             self.__objects.append(arg)
             
-
+    def get_elements(self):
+        return self.__objects
 class Rectangle(object):
     def __init__(self, A, B, n):
         
@@ -58,7 +59,7 @@ class Rectangle(object):
         self.__B=np.array(B)
         self.__n=n
     def __repr__(self):
-        return f"RECTANGLE\n{tuple(self.__A)}\n{tuple(self.__B)}\n{self.__n}" 
+        return f"RECTANGLE\n{tuple(self.__A)}\n{tuple(self.__B)}\n{self.__n}\n" 
     
     def isIn(self, P):
         if not type(P) in {tuple , list, np.array}:
@@ -97,4 +98,4 @@ class Circle(object):
              return False
          
     def __repr__(self):
-        return f"CIRCLE\n{tuple(self.__C)}\n{self.__r}\n{self.__n}"
+        return f"CIRCLE\n{tuple(self.__C)}\n{self.__r}\n{self.__n}\n"
