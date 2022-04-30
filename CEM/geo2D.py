@@ -59,7 +59,7 @@ class Plane(object):
             if _[0]=="RECTANGLE":
                 __+=f"RECTANGLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{self.__Origin+_[2][0]*self.__e1+_[2][1]*self.__e2}\n{_[3]}\n"#
             elif _[0]=="CIRCLE":
-                __+=f"CIRCLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{_[2]}\n{_[3]}"
+                __+=f"CIRCLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{_[2]}\n{_[3]}\n"
         return __
 class Rectangle(object):
     def __init__(self, A, B, n):
@@ -121,6 +121,3 @@ class Circle(object):
          
     def info(self):
         return "CIRCLE",tuple(self.__C),self.__r,self.__n
-    
-a=Rectangle((8,8), (0,0), 2)
-print(a.info())
