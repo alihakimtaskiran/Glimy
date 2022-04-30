@@ -45,7 +45,6 @@ class Plane(object):
         for n in argv:
             self.add(n)
         
-        
     def get_elements(self):
         return self.__objects
     
@@ -57,11 +56,13 @@ class Plane(object):
         for element in self.__objects:
             _=element.info()
             if _[0]=="RECTANGLE":
-                __+=f"RECTANGLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{self.__Origin+_[2][0]*self.__e1+_[2][1]*self.__e2}\n{_[3]}\n"#
+                __+=f"RECTANGLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{self.__Origin+_[2][0]*self.__e1+_[2][1]*self.__e2}\n{_[3].real}\n{_[3].imag}\n"#
             elif _[0]=="CIRCLE":
-                __+=f"CIRCLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{_[2]}\n{_[3]}\n"
+                __+=f"CIRCLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{_[2]}\n{_[3].real}\n{_[3].imag}\n"
         return __
+
 class Rectangle(object):
+    
     def __init__(self, A, B, n):
         
         if not type(A) in {tuple, list, np.array}:
@@ -82,7 +83,6 @@ class Rectangle(object):
     def info(self):
         return "RECTANGLE", self.__A, self.__B, self.__n 
         
-        
     def isIn(self, P):
         if not type(P) in {tuple , list, np.array}:
             raise TypeError("Point must be an array, tuple or list")
@@ -96,6 +96,7 @@ class Rectangle(object):
 
 
 class Circle(object):
+    
     def __init__(self, C, r, n):
         if not type(C) in {tuple, list, np.array}:
             raise TypeError("C(Center) must be an array, tuple or list")
@@ -109,6 +110,7 @@ class Circle(object):
         self.__C=np.array(C)
         self.__r=float(r)
         self.__n=n
+        
     def isIn(self, P):
          if not len(P)==2:
              raise ValueError("Point must be 2D")
