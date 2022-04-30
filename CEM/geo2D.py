@@ -22,25 +22,44 @@ class Plane(object):
             raise ValueError("Basis vectors must be orthagonal")
         
         if normalize:
-            self.__e1=self.__normalize(Basis_Vectors[0])
-            self.__e2=self.__normalize(Basis_Vectors[1])
+            self.__e1=self.__normalize(np.array(Basis_Vectors[0]))
+            self.__e2=self.__normalize(np.array(Basis_Vectors[1]))
         else:
-            self.__e1=Basis_Vectors[0]
-            self.__e2=Basis_Vectors[1]
-        
+            self.__e1=np.array(Basis_Vectors[0])
+            self.__e2=np.array(Basis_Vectors[1])
+        self.__Origin=np.array(Origin)
         self.__objects=[]
     def __normalize(self, vec):
         return vec/np.linalg.norm(vec)
     
     def add(self, arg):
         _=type(arg)
-        if not (_==Rectangle or _==Circle):
-            raise TypeError("Only defined geometries are allowed to be added")
-        else:
+        if (_==Rectangle or _==Circle):
             self.__objects.append(arg)
-            
+        elif _==list or _==tuple or _==set:
+            self.__add_multiple(arg)
+        else:
+            raise TypeError("Only defined geometries are allowed to be added")
+    
+    def __add_multiple(self, argv):
+        for n in argv:
+            self.add(n)
+        
+        
     def get_elements(self):
         return self.__objects
+    
+    def info(self):
+        return "PLANE", self.__Origin, (self.__e1, self.__e2)
+    
+    def mixtape(self):
+        __=""
+        for element in self.__objects:
+            _=element.info()
+            if _[0]=="RECTANGLE":
+                __+=f"RECTANGLE\n{self.__Origin+_[1][0]*self.__e1+_[1][1]*self.__e2}\n{self.__Origin+_[2][0]*self.__e1+_[2][1]*self.__e2}\n{_[3]}\n"#
+            
+        return __
 class Rectangle(object):
     def __init__(self, A, B, n):
         
@@ -58,9 +77,11 @@ class Rectangle(object):
         self.__A=np.array(A)
         self.__B=np.array(B)
         self.__n=n
-    def __repr__(self):
-        return f"RECTANGLE\n{tuple(self.__A)}\n{tuple(self.__B)}\n{self.__n}\n" 
-    
+
+    def info(self):
+        return "RECTANGLE", self.__A, self.__B, self.__n 
+        
+        
     def isIn(self, P):
         if not type(P) in {tuple , list, np.array}:
             raise TypeError("Point must be an array, tuple or list")
@@ -97,5 +118,8 @@ class Circle(object):
          else:
              return False
          
-    def __repr__(self):
-        return f"CIRCLE\n{tuple(self.__C)}\n{self.__r}\n{self.__n}\n"
+    def info(self):
+        return "CIRCLE",tuple(self.__C),self.__r,self.__n
+    
+a=Rectangle((8,8), (0,0), 2)
+print(a.info())

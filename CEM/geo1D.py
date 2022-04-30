@@ -22,4 +22,3 @@ class Line(object):
         self.__n=n
     def __repr__(self):
         return f"LINE\n{self.__Origin}\n{self.__Pointing}\n{self.__n}\n"
-
