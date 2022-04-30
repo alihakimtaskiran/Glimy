@@ -75,9 +75,7 @@ class Grid(object):
                 raise TypeError("Only given types are defined on line")
             self.__objects.append(element)
      
-    def __Plane_renderer(self, Origin):
-        pass
-        
+
     def TopoRender(self):
         file=open(tmp+"/structure.tgf","w") #topological geometry file
         file.write(f"PREAMBLE\n{self.__dim}\n{self.__curvilinear}\n")
@@ -91,6 +89,9 @@ class Grid(object):
                 file.write(element.mixtape())
                 
                     
+        file.close()
+        file=open(tmp+"/metric.guv","w")
+        file.write(str(self.__guv))
         file.close()
     
     def RenderWiev(self):
