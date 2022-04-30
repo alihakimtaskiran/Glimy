@@ -34,7 +34,7 @@ class RecPrism(object):
         return True
 
     def __repr__(self):
-        return f"RECTPRISM\n{self.__A}\n{self.__B}\n{self.__n}\n"    
+        return f"RECTPRISM\n{self.__A}\n{self.__B}\n{self.__n.real}\n{self.__n.imag}\n"    
     
 class Sphere(object):
     def __init__(self, C, r, n):
@@ -62,10 +62,9 @@ class Sphere(object):
              return False
          
     def __repr__(self):
-        return f"SPHERE\n{self.__C}\n{self.__r}\n{self.__n}\n"
+        return f"SPHERE\n{self.__C}\n{self.__r}\n{self.__n.real}\n{self.__n.imag}\n"
         
-        
-        
+             
 class Cylinder(object):
     def __init__(self, CB, r, h, n):
         if not type(CB) in {tuple, list, np.array}:
@@ -98,4 +97,4 @@ class Cylinder(object):
          else:
              False
     def __repr__(self):
-        return f"CYLINDER\n{self.__CB}\n{np.array((self.__r, self.__h))}\n{self.__n}\n"
+        return f"CYLINDER\n{self.__CB}\n{np.array((self.__r, self.__h))}\n{self.__n.real}\n{self.__n.imag}\n"
