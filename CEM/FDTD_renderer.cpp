@@ -33,7 +33,7 @@ int main(){
     static double deltaS=stod(read);    
     getline(io,read);
     static double deltaT=stod(read);
-    //the preamble read
+    //the preamble is read
 
     
 
