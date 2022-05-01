@@ -13,7 +13,6 @@ void print(double arg){
 
 }
 
-
 int main(){
     fstream io;
     
@@ -75,43 +74,262 @@ int main(){
 
     io.open("structure.tgf");
 
-    for (int i=0; i<5;i++){
+    for (int i=0; i<5;i++)
+    {
         getline(io, read);
-
     }
 
-    uint32_t i=0;
-    uint8_t shapes=0;
-    while(read!=""){
-        getline(io,read);
+    i=0;
+    uint8_t shape=0;
+    uint32_t sc[5]={0,0,0,0,0};//shape_counts
+    while(getline(io,read)){
         if(i%5==0)
         {
             if (read=="RECTANGLE")
             {
-                shapes=0;
+                shape=0;
             }
             else if(read=="CIRCLE")
             {
-                shapes=1;
+                shape=1;
             }
             else if(read=="RECTPRISM")
             {
-                shapes=2;
+                shape=2;
             }
             else if(read=="SPHERE")
             {
-                shapes=3;
+                shape=3;
             }
             else if(read=="CYLINDER")
             {
-                shapes=4;
+                shape=4;
             }
         }   
 
+        else if(i%5==1)
+        {
+            
+            
+                if (shape== 0)
+                {
+                    uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                        if(read[j]==' ')
+                        {   
+                            spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+                    rectangle[0][0]=stod(read.substr(1, spaces[0]));
+                    rectangle[sc[0]][1]=stod(read.substr(spaces[0], spaces[1]));
+                    rectangle[sc[0]][2]=stod(read.substr(spaces[1],_));
+                    
+                }
 
-        i++;
+                else if (shape==1 )
+                {   
+                    uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                        if(read[j]==' ')
+                        {   
+                            spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+                    circle[sc[1]][0]=stod(read.substr(1, spaces[0]));
+                    circle[sc[1]][1]=stod(read.substr(spaces[0], spaces[1]));
+                    circle[sc[1]][2]=stod(read.substr(spaces[1],_));
+                }
+                else if (shape==2 )
+                {   uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                        if(read[j]==' ')
+                        {   
+                            spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+                    rectprism[sc[2]][0]=stod(read.substr(1, spaces[0]));
+                    rectprism[sc[2]][1]=stod(read.substr(spaces[0], spaces[1]));
+                    rectprism[sc[2]][2]=stod(read.substr(spaces[1],_));
+                }
+                else if (shape== 3)
+                {   uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                        if(read[j]==' ')
+                        {   
+                            spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+                    sphere[sc[3]][0]=stod(read.substr(1, spaces[0]));
+                    sphere[sc[3]][1]=stod(read.substr(spaces[0], spaces[1]));
+                    sphere[sc[3]][2]=stod(read.substr(spaces[1],_));
+                }
+                else if (shape== 4)
+                {   
+                    uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                        if(read[j]==' ')
+                        {   
+                            spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+                    cylinder[sc[4]][0]=stod(read.substr(1, spaces[0]));
+                    cylinder[sc[4]][1]=stod(read.substr(spaces[0], spaces[1]));
+                    cylinder[sc[4]][2]=stod(read.substr(spaces[1],_));
+                    
+                }
+
+
+            }
+
+        
+
+        else if(i%5==2)
+        {
+            
+            switch(shape)
+            {
+                case 0:
+                {
+                    uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                    if(read[j]==' ')
+                    {   
+                        spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+
+                    rectangle[sc[0]][3]=stod(read.substr(1, spaces[0]));
+                    rectangle[sc[0]][4]=stod(read.substr(spaces[0], spaces[1]));
+                    rectangle[sc[0]][5]=stod(read.substr(spaces[1],_));
+
+                    break;
+                }
+                case 1:
+                {
+                    circle[sc[1]][3]=stod(read);
+                    break;
+                }
+                case 2:
+                {
+                    uint16_t spaces[2]={0};
+                    uint8_t space_count=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                    if(read[j]==' ')
+                    {   
+                        spaces[space_count]=j;
+                            space_count++;
+                        }
+                    }
+                    rectprism[sc[2]][3]=stod(read.substr(1, spaces[0]));
+                    rectprism[sc[2]][4]=stod(read.substr(spaces[0], spaces[1]));
+                    rectprism[sc[2]][5]=stod(read.substr(spaces[1],_));
+                    break;
+                }
+                case 3:
+                {
+                    sphere[sc[3]][3]=stod(read);
+                    break;
+                }
+                case 4:
+                {
+                    uint8_t space=0;
+                    uint8_t _=read.length()-1;
+                    for(uint16_t j=1;j<_;j++)
+                    {
+                        if(read[j]==' ')
+                        {   
+                            space=j;
+                            break;
+                        }
+
+                    }
+                    cylinder[sc[4]][3]=stod(read.substr(1, space));
+                    cylinder[sc[4]][4]=stod(read.substr(space,_));
+                    break;
+                }
+        }
+        
     }
 
+
+        else if(i%5==3)//refractive indexes
+        {
+            if (shape==0)
+            {
+               rectangle[sc[0]][6]=stod(read);
+            }
+            else if(shape==1)
+            {
+               circle[sc[1]][4]=stod(read);
+            }
+            else if(shape==2)
+            {
+               rectprism[sc[2]][6]=stod(read);
+            }
+            else if(shape==3)
+            {
+                sphere[sc[3]][4]=stod(read);   
+            }
+            else if(shape==4)
+            {
+                cylinder[sc[4]][5]=stod(read);
+            }
+        }   
+         else if(i%5==4)//extiniction coefficients
+        {
+            if (shape==0)
+            {
+                rectangle[sc[0]][7]=stod(read);
+
+               
+            }
+            else if(shape==1)
+            {
+                circle[sc[1]][5]=stod(read);
+            }
+            else if(shape==2)
+            {
+                rectprism[sc[2]][7]=stod(read);
+            }
+            else if(shape==3)
+            {
+                sphere[sc[3]][5]=stod(read);
+            }
+            else if(shape==4)
+            {
+                cylinder[sc[4]][6]=stod(read);
+            }
+            sc[shape]++;
+        }   
+        i++;
+
+    }
 
     io.close();
     return 0;
