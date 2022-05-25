@@ -129,7 +129,7 @@ int main()
         for(uint8_t j=0;j<___;j++)
         {
             energizers[i][j]=stof(read.substr(spaces[j],spaces[j+1]));
-
+            print(energizers[i][j]);
         }
     }
 
@@ -146,6 +146,7 @@ int main()
     {
         std::getline(io,read);
         observer[i]=stol(read);
+        
     }
     std::getline(io,read);
     string savedir=read;
@@ -195,7 +196,7 @@ int main()
                 if(*(pt+1)<=ti&&ti<*(pt+2))
                 {   
                     int __=*pt;
-                    E_z[__]=(*pt+3)*sin(pi_2*ti*dt*(*(pt+4))+(*pt+5));
+                    E_z[int(energizers[source][0])]+=energizers[source][3]*sin(pi_2*ti*dt*(energizers[source][4])+energizers[source][5]);
                 }
 
 
