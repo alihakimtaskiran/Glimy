@@ -1,24 +1,40 @@
-"""
-1D Geometry Identifier
-"""
-import numpy as np
 class Line(object):
-    def __init__(self, Origin, Pointing, n):
-        if not type(Origin) in {tuple, list, np.array}:
-            raise TypeError("Origin must an array, tuple or list")
-        if not len(Origin)==3:
-            raise ValueError("Origin must be 3D")
+    def __init__(self, A, B, layer, e=1, mu=1):
+        
+        if not isinstance(A, (int, float)):
+            raise TypeError("A must be a float or int")
+        if not isinstance(B, (int, float)):
+            raise TypeError("B must be a float or int")
+
+        if not A<=B:
+            raise ValueError("A must be less than B") 
+        
+        if not A>=0:
+            raise ValueError("A must be greater than 0") 
             
-        if not type(Pointing) in {tuple, list, np.array}:
-            raise TypeError("Pointing vector must an array, tuple or list")
-        if not len(Pointing)==3:
-            raise ValueError("Pointing vector must be 3D")
-            
-        if not type(n) in {complex, float, int}:
-            raise TypeError("Refractive index must be a number")
-            
-        self.__Origin=tuple(Origin)
-        self.__Pointing=tuple(Pointing)
-        self.__n=n
+        if not B>=0:
+            raise ValueError("B must be greater than 0")
+        
+        if not isinstance(layer, int):
+            raise TypeError("Layer must be an int")
+        
+        if not isinstance(e, (int, float, complex)):
+            raise TypeError("e(permittivity) must be a complex, float or int")
+        
+        if not isinstance(mu, (int, float, complex)):
+            raise TypeError("mu(permiablity) must be a complex, float or int")
+        
+        self.__A=A
+        self.__B=B
+        self.__layer=layer
+        self.__e=e
+        self.__mu=mu
+
+
     def __repr__(self):
-        return f"LINE\n{self.__Origin}\n{self.__Pointing}\n{self.__n}\n"
+        return f"0 {self.__A} {self.__B} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
+    
+    def t(self):
+        return 0
+    
+        
