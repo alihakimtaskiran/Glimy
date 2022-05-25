@@ -1,6 +1,6 @@
 #include<fstream>
 #include<iostream>
-#include<cmath>
+#include<cmath> 
 #include<string>
 using namespace std;
 
@@ -8,330 +8,227 @@ void print(string arg){
 
     cout<<arg<<endl;
 }
-void print(double arg){
+void print(float arg){
         cout<<arg<<endl;
 
 }
 
-int main(){
+float Z_0=376.730313;
+float c=299792458;
+float pi_2=2*M_PI;
+
+
+int main()
+{
+
     fstream io;
-    
     string read;
+    io.open("/tmp/MemoriesWillFade/counts.tgf");
+    std::getline(io,read);
+    int n_of_types=stoi(read);
 
-    io.open("structure.tgf");
-    getline(io,read);
-    getline(io,read);
+    //As the new geometries are defined, add here new shapes
 
-    static uint8_t dim=stoi(read);
-    getline(io,read);
-    static bool curvilinear=false;
-    if (read=="1")
-    {
-        curvilinear=true;
-    }
-    getline(io,read);
-    static double deltaS=stod(read);    
-    getline(io,read);
-    static double deltaT=stod(read);
-    //the preamble is read
-    uint32_t i=0;
-    uint32_t shapes[5]={0};//Rectangle, Circle, RectPrism, Sphere, Cylinder
-    while(read!=""){
-        getline(io,read);
-        if(i%5==0)
-        {
-            if (read=="RECTANGLE")
-            {
-                shapes[0]+=1;
-            }
-            else if(read=="CIRCLE")
-            {
-                shapes[1]+=1;
-            }
-            else if(read=="RECTPRISM")
-            {
-                shapes[2]+=1;
-            }
-            else if(read=="SPHERE")
-            {
-                shapes[3]+=1;
-            }
-            else if(read=="CYLINDER")
-            {
-                shapes[4]+=1;
-            }
-        }        
-        i++;
-    }
+    std::getline(io,read);
+    float lines[stoi(read)][7];//A, B, layer, Re(e), Im(e), Re(mu), Im(mu)
 
     io.close();
 
-    double rectangle[shapes[0]][8]={0.};//A_x, A_y, A_z, B_x, B_y, B_z, n, k
-    double circle[shapes[1]][6]={0.};//C_x, C_y,C_z, r, n, k
-    double rectprism[shapes[2]][8]={0.};//A_x, A_y, A_z, B_x, B_y, B_z, n, k
-    double sphere[shapes[3]][6]={0.};//C_x, C_y,C_z, r, n, k
-    double cylinder[shapes[4]][7]={0.};//C_x, C_y, C_z, r, h, n, k
 
-    io.open("structure.tgf");
 
-    for (int i=0; i<5;i++)
+    io.open("/tmp/MemoriesWillFade/structure.tgf");//topological geometry file
+    std::getline(io, read);//reading preamble
+
+    std::getline(io, read);
+    int16_t dim=stoi(read);
+    std::getline(io, read);
+    unsigned long n_of_geometries=stoi(read);
+    std::getline(io, read);
+    bool ANC=bool(stoi(read));
+    std::getline(io, read);
+    float ds=stof(read);
+    float dt=ds/c;
+
+    unsigned long grid_size[dim];
+    for(uint8_t i=0;i<dim;i++)
     {
-        getline(io, read);
+        std::getline(io, read);
+        grid_size[i]=stol(read);
     }
+    std::getline(io, read);
 
-    i=0;
-    uint8_t shape=0;
-    uint32_t sc[5]={0,0,0,0,0};//shape_counts
-    while(getline(io,read)){
-        if(i%5==0)
+    for(unsigned long i=0;i<n_of_geometries; i++)
+    {   
+        std::getline(io, read);
+        uint8_t space_count=0;
+        uint16_t __=read.length();
+        for(uint8_t j=0;j<__;j++)
         {
-            if (read=="RECTANGLE")
+            if(read[j]==' ')
             {
-                shape=0;
+                space_count+=1;
             }
-            else if(read=="CIRCLE")
-            {
-                shape=1;
-            }
-            else if(read=="RECTPRISM")
-            {
-                shape=2;
-            }
-            else if(read=="SPHERE")
-            {
-                shape=3;
-            }
-            else if(read=="CYLINDER")
-            {
-                shape=4;
-            }
-        }   
-
-        else if(i%5==1)
+        }
+        uint16_t spaces[space_count+2];
+        spaces[0]=0;
+        uint16_t si=1;
+        for(uint8_t j=0;j<__;j++)
         {
-            
-            
-                if (shape== 0)
-                {
-                    uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                        if(read[j]==' ')
-                        {   
-                            spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
-                    rectangle[0][0]=stod(read.substr(1, spaces[0]));
-                    rectangle[sc[0]][1]=stod(read.substr(spaces[0], spaces[1]));
-                    rectangle[sc[0]][2]=stod(read.substr(spaces[1],_));
-                    
-                }
-
-                else if (shape==1 )
-                {   
-                    uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                        if(read[j]==' ')
-                        {   
-                            spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
-                    circle[sc[1]][0]=stod(read.substr(1, spaces[0]));
-                    circle[sc[1]][1]=stod(read.substr(spaces[0], spaces[1]));
-                    circle[sc[1]][2]=stod(read.substr(spaces[1],_));
-                }
-                else if (shape==2 )
-                {   uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                        if(read[j]==' ')
-                        {   
-                            spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
-                    rectprism[sc[2]][0]=stod(read.substr(1, spaces[0]));
-                    rectprism[sc[2]][1]=stod(read.substr(spaces[0], spaces[1]));
-                    rectprism[sc[2]][2]=stod(read.substr(spaces[1],_));
-                }
-                else if (shape== 3)
-                {   uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                        if(read[j]==' ')
-                        {   
-                            spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
-                    sphere[sc[3]][0]=stod(read.substr(1, spaces[0]));
-                    sphere[sc[3]][1]=stod(read.substr(spaces[0], spaces[1]));
-                    sphere[sc[3]][2]=stod(read.substr(spaces[1],_));
-                }
-                else if (shape== 4)
-                {   
-                    uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                        if(read[j]==' ')
-                        {   
-                            spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
-                    cylinder[sc[4]][0]=stod(read.substr(1, spaces[0]));
-                    cylinder[sc[4]][1]=stod(read.substr(spaces[0], spaces[1]));
-                    cylinder[sc[4]][2]=stod(read.substr(spaces[1],_));
-                    
-                }
-
-
+            if(read[j]==' ')
+            {   
+                spaces[si]=j;
+                si+=1;
             }
-
+        }
+        spaces[space_count+1]=__-1;
+        uint8_t _=space_count+1;
+ 
+        uint8_t type=stoi(read.substr(spaces[0],spaces[1]));
         
+        switch(type){
+            case 0:
 
-        else if(i%5==2)
-        {
-            
-            switch(shape)
-            {
-                case 0:
-                {
-                    uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                    if(read[j]==' ')
-                    {   
-                        spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
+                for(uint8_t j=1;j<_;j++)
+                {   
+                    lines[i][j-1]=stof(read.substr(spaces[j], spaces[j+1]));
+                    //cout<<lines[i][j-1]<<"||";
 
-                    rectangle[sc[0]][3]=stod(read.substr(1, spaces[0]));
-                    rectangle[sc[0]][4]=stod(read.substr(spaces[0], spaces[1]));
-                    rectangle[sc[0]][5]=stod(read.substr(spaces[1],_));
 
-                    break;
                 }
-                case 1:
-                {
-                    circle[sc[1]][3]=stod(read);
-                    break;
-                }
-                case 2:
-                {
-                    uint16_t spaces[2]={0};
-                    uint8_t space_count=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                    if(read[j]==' ')
-                    {   
-                        spaces[space_count]=j;
-                            space_count++;
-                        }
-                    }
-                    rectprism[sc[2]][3]=stod(read.substr(1, spaces[0]));
-                    rectprism[sc[2]][4]=stod(read.substr(spaces[0], spaces[1]));
-                    rectprism[sc[2]][5]=stod(read.substr(spaces[1],_));
-                    break;
-                }
-                case 3:
-                {
-                    sphere[sc[3]][3]=stod(read);
-                    break;
-                }
-                case 4:
-                {
-                    uint8_t space=0;
-                    uint8_t _=read.length()-1;
-                    for(uint16_t j=1;j<_;j++)
-                    {
-                        if(read[j]==' ')
-                        {   
-                            space=j;
-                            break;
-                        }
+                //print("");
+                break;
 
-                    }
-                    cylinder[sc[4]][3]=stod(read.substr(1, space));
-                    cylinder[sc[4]][4]=stod(read.substr(space,_));
-                    break;
-                }
         }
         
     }
-
-
-        else if(i%5==3)//refractive indexes
+    io.close();
+    
+    io.open("/tmp/MemoriesWillFade/energizers.wm");
+    std::getline(io,read);
+    unsigned long n_of_energizers=stol(read);
+    uint8_t ___=dim+5;
+    float energizers[n_of_energizers][___];//[location], [presence], amplitude, frequency, phase
+    for(unsigned long i=0; i<n_of_energizers; i++)
+    {
+        std::getline(io,read);
+        int8_t _=dim+6;
+        uint32_t spaces[_];
+        spaces[0]=0;
+        uint32_t len=read.length();
+        spaces[dim+5]=len;
+        uint8_t sc=1;
+        for(uint32_t j=0;j<len;j++)
         {
-            if (shape==0)
-            {
-               rectangle[sc[0]][6]=stod(read);
+            if(read[j]==' ')
+            {   
+                spaces[sc]=j;
+                sc++;
             }
-            else if(shape==1)
-            {
-               circle[sc[1]][4]=stod(read);
-            }
-            else if(shape==2)
-            {
-               rectprism[sc[2]][6]=stod(read);
-            }
-            else if(shape==3)
-            {
-                sphere[sc[3]][4]=stod(read);   
-            }
-            else if(shape==4)
-            {
-                cylinder[sc[4]][5]=stod(read);
-            }
-        }   
-         else if(i%5==4)//extiniction coefficients
+        }
+
+        for(uint8_t j=0;j<___;j++)
         {
-            if (shape==0)
-            {
-                rectangle[sc[0]][7]=stod(read);
+            energizers[i][j]=stof(read.substr(spaces[j],spaces[j+1]));
 
-               
-            }
-            else if(shape==1)
-            {
-                circle[sc[1]][5]=stod(read);
-            }
-            else if(shape==2)
-            {
-                rectprism[sc[2]][7]=stod(read);
-            }
-            else if(shape==3)
-            {
-                sphere[sc[3]][5]=stod(read);
-            }
-            else if(shape==4)
-            {
-                cylinder[sc[4]][6]=stod(read);
-            }
-            sc[shape]++;
-        }   
-        i++;
-
+        }
     }
 
     io.close();
-    return 0;
 
+
+
+
+    io.open("/tmp/MemoriesWillFade/renderer.dat");
+    std::getline(io,read);
+    unsigned long n_time_iter=stol(read);
+    unsigned long observer[dim];
+    for(uint8_t i=0;i<dim;i++)
+    {
+        std::getline(io,read);
+        observer[i]=stol(read);
+    }
+    std::getline(io,read);
+    string savedir=read;
+    io.close();
+
+
+    if(dim==1)
+    {
+  
+        float E_z[grid_size[0]]={0.};
+        float H_y[grid_size[0]]={0.};
+
+        float e_r[grid_size[0]][2];
+        float mu_r[grid_size[0]][2];
+        
+
+        for(unsigned long li=0;li<grid_size[0];li++)
+        {
+            float current_layer=lines[0][2];
+            unsigned long current_shape=0;
+           
+           for(unsigned long sh=0; sh<n_of_geometries; sh++)
+           {
+               if(lines[sh][2]<current_layer && lines[sh][0]<=li &&li<=lines[sh][1])
+               {
+                   current_layer=lines[sh][2];
+                   current_shape=sh;
+               }
+            
+           }
+           e_r[li][0]=lines[current_shape][3];
+           e_r[li][1]=lines[current_shape][4];
+           mu_r[li][0]=lines[current_shape][5];
+           mu_r[li][1]=lines[current_shape][6];
+          // cout<<li<<":"<<e_r[li][0]<<"**"<<mu_r[li][0]<<endl;
+        }
+       
+        float sampler[n_time_iter];
+
+        for(unsigned long ti=0; ti<n_time_iter; ti++)
+        {
+            for(unsigned long source=0; source<n_of_energizers; source++)
+            {
+
+                float *pt=&energizers[source][0];
+
+                if(*(pt+1)<=ti&&ti<*(pt+2))
+                {   
+                    int __=*pt;
+                    E_z[__]=(*pt+3)*sin(pi_2*ti*dt*(*(pt+4))+(*pt+5));
+                }
+
+
+            }
+
+            for(unsigned long li=0;li<grid_size[0]-1;li++)
+            {
+                H_y[li]+=(E_z[li+1]-E_z[li])/(Z_0*mu_r[li][0]);
+            }
+
+            for(unsigned long li=0;li<grid_size[0];li++)
+            {
+                E_z[li]+=(H_y[li]-H_y[li-1])*Z_0/e_r[li][0];
+            }
+
+            sampler[ti]=E_z[observer[0]];
+
+        }
+
+        io.open(savedir+"/wave.wm");
+        for(unsigned long ti=0; ti<n_time_iter; ti++)
+        {
+            io<<to_string(sampler[ti])<<" ";
+        }
+        io.close();
+        
+    
+        
+    }
+
+
+    
+     
+
+    return 0;
 }
