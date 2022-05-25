@@ -1,7 +1,7 @@
 import os
 import platform
 import numpy as np
-import CCCEM.geo1D
+import CEM.geo1D
 
 
 oss=platform.system()
@@ -135,7 +135,7 @@ class Continuum(object):
         self.__export_Topology()
         self.__export_shape_counts()
         self.__export_energizers()
-        os.system("cd CCCEM;./renderer")
+        os.system("cd CEM;./FDTD_renderer")
 
     
 
