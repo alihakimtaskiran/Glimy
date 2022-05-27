@@ -1,7 +1,8 @@
 import os
 import platform
 import numpy as np
-import CEM.geo1D
+import CCCEM.geo1D
+import CCCEM.geo2D
 
 
 oss=platform.system()
@@ -46,7 +47,7 @@ class Continuum(object):
         self.__grid_size=grid_size
         self.__ANC=ANC
         self.__geometries=[]
-        self.__object_types=[0]
+        self.__object_types=[0,0,0]
         self.__ds=ds
         self.__energizers=[]
         
@@ -56,6 +57,9 @@ class Continuum(object):
                 self.add(element)
         elif self.__dim==1 and not isinstance(arg, (geo1D.Line,)):
             raise TypeError("In 1-D, only lines are allowed")
+        
+        elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle)):
+            raise TypeError("In 2-D, only defined geometries are allowed")
         
         else:
             self.__geometries.append(arg)
@@ -77,9 +81,9 @@ class Continuum(object):
         file.write(f"{self.__dim}\n{len(self.__geometries)}\n{int(self.__ANC)}\n{self.__ds}\n")
         __=""
         for i in range(self.__dim):
-            __+=str(self.__grid_size[i])+" "
+            __+=str(self.__grid_size[i])+"\n"
 
-        file.write(__+"\nDATA\n")
+        file.write(__+"DATA\n")
 
         for arg in self.__geometries:
             file.write(repr(arg)+"\n")
@@ -135,12 +139,12 @@ class Continuum(object):
         self.__export_Topology()
         self.__export_shape_counts()
         self.__export_energizers()
-        os.system("cd CEM;./FDTD_renderer")
+        os.system("cd CCCEM;./FDTD_renderer")
 
     
 
 class DotSource(object):
-    def __init__(self, location, presence ,amplitude, frequency, phase):
+    def __init__(self, location, presence ,amplitude, frequency, phase=0):
         self.__location=location
         self.__amplitude=amplitude
         self.__frequency=frequency

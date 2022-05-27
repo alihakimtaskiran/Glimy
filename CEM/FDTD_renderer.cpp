@@ -32,6 +32,13 @@ int main()
     std::getline(io,read);
     float lines[stoi(read)][7];//A, B, layer, Re(e), Im(e), Re(mu), Im(mu)
 
+    std::getline(io,read);
+    float rectangles[stoi(read)][9]; //A1, A2, B1, B2, layer, Re(e), Im(e), Re(mu), Im(mu)
+
+    std::getline(io,read);
+    float circles[stoi(read)][8]; //A1, A2, r, layer, Re(e), Im(e), Re(mu), Im(mu)
+
+
     io.close();
 
 
@@ -53,7 +60,8 @@ int main()
     for(uint8_t i=0;i<dim;i++)
     {
         std::getline(io, read);
-        grid_size[i]=stol(read);
+       
+        grid_size[i]=stoi(read);
     }
     std::getline(io, read);
 
@@ -96,6 +104,30 @@ int main()
 
                 }
                 //print("");
+                break;
+            
+            case 1:
+
+                for(uint8_t j=1;j<_;j++)
+                {   
+                    rectangles[i][j-1]=stof(read.substr(spaces[j], spaces[j+1]));
+                    cout<<rectangles[i][j-1]<<"||";
+
+
+                }
+                print("");
+                break;
+            
+            case 2:
+
+                for(uint8_t j=1;j<_;j++)
+                {   
+                    circles[i][j-1]=stof(read.substr(spaces[j], spaces[j+1]));
+                    cout<<circles[i][j-1]<<"||";
+
+
+                }
+                print("");
                 break;
 
         }
@@ -224,6 +256,13 @@ int main()
         
     
         
+    }
+
+    else if(dim==2)
+    {
+
+
+
     }
 
 
