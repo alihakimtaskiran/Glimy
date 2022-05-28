@@ -1,100 +1,138 @@
-"""
-3D Geometry processor
-"""
-import numpy as np
-class RecPrism(object):
-    def __init__(self, A, B, n):
-        if not type(A) in {tuple, list, np.array}:
-            raise TypeError("A must an array, tuple or list")
-        if not len(A)==3:
-            raise ValueError("A must be 3D")
-        
-        if not type(B) in {tuple, list, np.array}:
-            raise TypeError("B must an array, tuple or list")
-        if not len(B)==3:
-            raise ValueError("B must be 3D")
+from numpy import array
+class RectPrism(object):
+    def __init__(self, A, B, layer=0, e=1, mu=1):
+        if not isinstance(A, (tuple, list, array)):
+            raise TypeError("A must be a tuple, list or array")
 
-        if not type(n) in {complex, float, int}:
-            raise TypeError("Refractive index must be a number")
-            
-        self.__A=np.array(A)
-        self.__B=np.array(B)
-        self.__n=n
+        if not isinstance(B, (tuple, list, array)):
+            raise TypeError("B must be a tuple, list or array")
 
-    def isIn(self, P):
-        
-        if not type(P) in {tuple , list, np.array}:
-            raise TypeError("Point must be an array, tuple or list")
-        if not len(P)==3:
-            raise ValueError("Point must be 3D")
-        
-        for i in range(3):
-            if not ((self.__A[i]<P[i]<self.__B[i]) ^ (self.__B[i]<P[i]<self.__A[i])):
-                return False
-        return True
-
-    def __repr__(self):
-        return f"RECTPRISM\n{self.__A}\n{self.__B}\n{self.__n.real}\n{self.__n.imag}\n"    
+        if len(A)!=3:
+            raise ValueError('A is defined in 3D')
     
+        if len(B)!=3:
+            raise ValueError('B is defined in 3D')
+
+        for i in A:
+	        if i<0:
+		        raise ValueError("Each component of A must be >=0")
+          
+        for i in B:
+	        if i<0:
+		        raise ValueError("Each component of B must be >=0")
+          
+        if not isinstance(layer, int):
+            raise TypeError("# of layer must be an int")
+    
+        if layer>1000:
+            raise ValueError("# of layer must be <=1000")
+
+        if not isinstance(e, (int, float, complex)):
+            raise TypeError("Permittivity(e) must be an int, float or complex")
+        if not isinstance(mu, (int, float, complex)):
+            raise TypeError("Permeability(mu) must be an int, float or complex")
+
+        self.__A=A
+        self.__B=B
+        self.__layer=layer
+        self.__e=e
+        self.__mu=mu
+    
+    def __repr__(self):
+        __="3 "
+        for i in self.__A:
+            __+=str(i)+" "
+        for i in self.__B:
+            __+=str(i)+" "
+        return __+f"{self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
+   
+    def t(self):
+        return 3
+
 class Sphere(object):
-    def __init__(self, C, r, n):
-        if not type(C) in {tuple, list, np.array}:
-            raise TypeError("C(Center) must be an array, tuple or list")
-        if not len(C)==3:
-            raise ValueError("Center must be 3D")
-        if not type(r) in {float, int}:
-            raise TypeError("r(radius) must be a number")
-            
-        if not type(n) in {complex, float, int}:
-            raise TypeError("Refractive index must be a number")
-        self.__C=np.array(C)
-        self.__r=float(r)
-        self.__n=n
-    
-    def isIn(self, P):
-         if not len(P)==3:
-             raise ValueError("Point must be 3D")
-         if not type(P) in {tuple , list, np.array}:
-             raise TypeError("Point must be an array, tuple or list")
-         if np.linalg.norm(np.array(P)-self.__C)<self.__r:
-             return True
-         else:
-             return False
-         
-    def __repr__(self):
-        return f"SPHERE\n{self.__C}\n{self.__r}\n{self.__n.real}\n{self.__n.imag}\n"
+    def __init__(self, C, r, layer=0, e=1, mu=1):
+        if not isinstance(C, (tuple, list, array)):
+            raise TypeError("C(center) must be a tuple, list or array")
         
-             
+        if len(C)!=3:
+            raise ValueError('C(center) is defined in 3D')
+        for i in C:
+	        if i<0:
+		        raise ValueError("Each component of C(center) must be >=0")
+        if not isinstance(r, (int, float)):
+            raise TypeError("r (radius) must be an int or float")
+        
+        if r<0:
+            raise ValueError("r (radius) must be >=0")
+
+        if not isinstance(layer, int):
+            raise TypeError("# of layer must be an int")
+
+        if layer>1000:
+            raise ValueError("# of layer must be <=1000")
+
+        if not isinstance(e, (int, float, complex)):
+            raise TypeError("Permittivity(e) must be an int, float or complex")
+        
+        if not isinstance(mu, (int, float, complex)):
+            raise TypeError("Permeability(mu) must be an int, float or complex")
+
+        self.__C=C
+        self.__r=r
+        self.__layer=layer
+        self.__e=e
+        self.__mu=mu
+
+    def __repr__(self):
+        return f"4 {self.__C[0]} {self.__C[1]} {self.__C[2]} {self.__r} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
+
+    def t(self):
+        return 4
+
 class Cylinder(object):
-    def __init__(self, CB, r, h, n):
-        if not type(CB) in {tuple, list, np.array}:
-            raise TypeError("CB(Center of Base) must be an array, tuple or list")
-        if not len(CB)==3:
-            raise ValueError("Center of Base must be 3D")
-            
-        if not type(r) in {float, int}:
-            raise TypeError("r(radius) must be a number")
-        if not type(h) in {float, int}:
-            raise TypeError("h(height) must be a number")
-        if not type(n) in {complex, float, int}:
-            raise TypeError("Refractive index must be a number")
+    def __init__(self, C, r, h, layer=0, e=1, mu=1):
+
+        if not isinstance(C, (tuple, list, array)):
+            raise TypeError("C(center) must be a tuple, list or array")
         
-        self.__CB=np.array(CB)
-        self.__r=float(r)
-        self.__h=float(h)
-        self.__n=n
-    
-    def isIn(self, P):
-         if not len(P)==3:
-             raise ValueError("Point must be 3D")
-         if not type(P) in {tuple , list, np.array}:
-             raise TypeError("Point must be an array, tuple or list")
+        if len(C)!=3:
+            raise ValueError('C(center) is defined in 3D')
+        for i in C:
+	        if i<0:
+		        raise ValueError("Each component of C must be >=0")
+        if not isinstance(r, (int, float)):
+            raise TypeError("r (radius) must be an int or float")
         
-         if np.linalg.norm(np.array(P[:2])-self.__CB[:2])<self.__r:
-             return True
-         elif P[2]-self.CB[2]<self.__h:
-             return True
-         else:
-             False
+        if r<0:
+            raise ValueError("r (radius) must be >=0")
+        
+        if not isinstance(h, (int, float)):
+            raise TypeError("h (height) must be an int or float")
+
+        if h<0:
+            raise ValueError("h (height) must be >=0")
+
+        if not isinstance(layer, int):
+            raise TypeError("# of layer must be an int")
+
+        if layer>1000:
+            raise ValueError("# of layer must be <=1000")
+
+        if not isinstance(e, (int, float, complex)):
+            raise TypeError("Permittivity(e) must be an int, float or complex")
+        
+        if not isinstance(mu, (int, float, complex)):
+            raise TypeError("Permeability(mu) must be an int, float or complex")
+
+        self.__C=C
+        self.__r=r
+        self.__h=h
+        self.__layer=layer
+        self.__e=e
+        self.__mu=mu
+
     def __repr__(self):
-        return f"CYLINDER\n{self.__CB}\n{np.array((self.__r, self.__h))}\n{self.__n.real}\n{self.__n.imag}\n"
+        return f"5 {self.__C[0]} {self.__C[1]} {self.__C[2]} {self.__r} {self.__h} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
+
+    def t(self):
+        return 5
