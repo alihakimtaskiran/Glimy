@@ -1,8 +1,9 @@
 import os
 import platform
 import numpy as np
-import CCCEM.geo1D
-import CCCEM.geo2D
+import CEM.geo1D
+import CEM.geo2D
+import CEM.geo3D
 
 
 oss=platform.system()
