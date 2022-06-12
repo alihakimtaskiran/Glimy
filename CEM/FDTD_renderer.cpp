@@ -45,6 +45,18 @@ int main()
     shapes[2]=stol(read);
     float circles[*(pt_shapes+2)][8]; //A1, A2, r, layer, Re(e), Im(e), Re(mu), Im(mu)
 
+    std::getline(io,read);
+    shapes[2]=stol(read);
+    float rectprisms[*(pt_shapes+3)][11];//A1, A2,A3, B1, B2, B3, layer, Re(e), Im(e), Re(mu), Im(mu)
+
+    std::getline(io,read);
+    shapes[2]=stol(read);
+    float spheres[*(pt_shapes+4)][8];//C1, C2, C3, r, layer, Re(e), Im(e), Re(mu), Im(mu)
+
+    std::getline(io,read);
+    shapes[2]=stol(read);
+    float cylinders[*(pt_shapes+5)][8];//C1, C2, C3, r, h, layer, Re(e), Im(e), Re(mu), Im(mu)
+
 
 
     io.close();
@@ -72,7 +84,6 @@ int main()
         grid_size[i]=stoi(read);
     }
     std::getline(io, read);
-
     for(unsigned long i=0;i<n_of_geometries; i++)
     {   
         std::getline(io, read);
@@ -137,8 +148,49 @@ int main()
                 }
                 //print("");
                 break;
+            case 3:
+
+                for(uint8_t j=1;j<_;j++)
+                {   
+                    rectprisms[i][j-1]=stof(read.substr(spaces[j], spaces[j+1]));
+                    //cout<<rectprisms[i][j-1]<<"||";
+
+
+                }
+                //cout<<endl;
+                break;
+
+
+            case 4:
+                for(uint8_t j=1;j<_;j++)
+                {   
+                    spheres[i][j-1]=stof(read.substr(spaces[j], spaces[j+1]));
+                    //cout<<spheres[i][j-1]<<"||";
+
+
+                }
+                //cout<<endl;
+                break;
+
+
+            case 5:
+                for(uint8_t j=1;j<_;j++)
+                {   
+                    cylinders[i][j-1]=stof(read.substr(spaces[j], spaces[j+1]));
+                    
+                    //cout<<cylinders[i][j-1]<<"||";
+
+
+                }
+                //cout<<endl;
+                break;
+            
+
+
+
 
         }
+        
         
     }
     io.close();
@@ -392,7 +444,14 @@ int main()
         io.close();
 
     }
+    else if(dim==3)
+    {
+        print("3D reality is ready to be rendered");
+    }
 
+
+    
+     
 
     return 0;
 }
