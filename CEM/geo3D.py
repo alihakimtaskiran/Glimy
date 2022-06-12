@@ -44,7 +44,7 @@ class RectPrism(object):
             __+=str(i)+" "
         for i in self.__B:
             __+=str(i)+" "
-        return __+f"{self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
+        return __+f"{self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
    
     def t(self):
         return 3
