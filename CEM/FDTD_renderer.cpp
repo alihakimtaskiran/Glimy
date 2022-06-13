@@ -333,10 +333,12 @@ int main()
         {
             for(unsigned long y=0; y<grid_size[1];y++)
             {
+                int current_layer=1001;
+                int current_shape[2]={0,0};
+
                 for(unsigned long i=0; i<*(pt_shapes+1); i++)
                 {
-                    int current_layer=1001;
-                    int current_shape[2]={0,0};
+                    
                     if(rectangles[i][4]<current_layer)
                     {
                         if (((rectangles[i][0]>=x&&x>=rectangles[i][2])||(rectangles[i][0]<=x&&x<=rectangles[i][2]))&&( (rectangles[i][3]>=y&&y>=rectangles[i][1])||(rectangles[i][3]<=y&&y<=rectangles[i][1])))
@@ -348,6 +350,9 @@ int main()
                             current_shape[1]=i;
                         }
                     }
+                }
+                for(unsigned long i=0; i<*(pt_shapes+2); i++)
+                {
                     if(circles[i][3]<current_layer){
                         if( pow((circles[i][0]-x),2)+pow((circles[i][1]-y),2)<=pow(circles[i][3],2)  )
                         {
@@ -357,6 +362,7 @@ int main()
                             //cout<<x<<","<<y<<" is in Circle "<<i<<endl;
                         }
                     }
+                }
                     if(current_layer==1001)
                     {
                         e_r[x][y][0]=1;
@@ -380,6 +386,7 @@ int main()
                             e_r[x][y][1]=circles[current_shape[1]][5];
                             mu_r[x][y][0]=circles[current_shape[1]][6];
                             mu_r[x][y][1]=circles[current_shape[1]][7];
+                            break;
                         default:
                             break;
                         }
@@ -387,7 +394,7 @@ int main()
                     }
                     //cout<<e_r[x][y][0]<<" "<<e_r[x][y][1]<<"**"<<mu_r[x][y][0]<<" "<<mu_r[x][y][1]<<endl;
                    
-                }
+                
 
                 
 
@@ -446,12 +453,178 @@ int main()
     }
     else if(dim==3)
     {
-        print("3D reality is ready to be rendered");
+       float E_x[grid_size[0]][grid_size[1]][grid_size[2]]={0.};
+       float E_y[grid_size[0]][grid_size[1]][grid_size[2]]={0.};
+       float E_z[grid_size[0]][grid_size[1]][grid_size[2]]={0.};
+
+       float H_x[grid_size[0]][grid_size[1]][grid_size[2]]={0.};
+       float H_y[grid_size[0]][grid_size[1]][grid_size[2]]={0.};
+       float H_z[grid_size[0]][grid_size[1]][grid_size[2]]={0.};
+
+       float sampler[n_time_iter];
+
+       float e_r[grid_size[0]][grid_size[1]][grid_size[2]][2];
+       float mu_r[grid_size[0]][grid_size[1]][grid_size[2]][2];
+
+       for(unsigned long x=0;x<grid_size[0];x++)
+        {
+            for(unsigned long y=0; y<grid_size[1];y++)
+            {
+                for(unsigned long z=0; z<grid_size[2];z++)
+                {
+                    int current_layer=1001;
+                    int current_shape[2]={0,0};
+                    for(unsigned long i=0; i<*(pt_shapes+3); i++)
+                    {
+                        
+                        
+                        if(rectprisms[i][6]<current_layer)
+                        {
+                            if (((rectprisms[i][0]>=x&&x>=rectprisms[i][3])||(rectprisms[i][0]<=x&&x<=rectprisms[i][3]))&&( (rectprisms[i][4]>=y&&y>=rectprisms[i][1])||(rectprisms[i][4]<=y&&y<=rectprisms[i][1])) && ( (rectprisms[i][5]>=z&&z>=rectprisms[i][2])||(rectprisms[i][5]<=z&&z<=rectprisms[i][2])))
+
+                            {
+                                //cout<<x<<","<<y<<" is in Rect "<<i<<endl;
+                                current_layer=rectprisms[i][6];
+                                current_shape[0]=3;
+                                current_shape[1]=i;
+                            }
+                        }
+                    }
+                    for(unsigned long i=0; i<*(pt_shapes+4); i++)
+                    {
+                        if(spheres[i][4]<current_layer)
+                        {
+                            if( pow((spheres[i][0]-x),2)+pow((spheres[i][1]-y),2)+pow((spheres[i][2]-z),2)<=pow(cylinders[i][3],2))
+                            {
+                                current_layer=spheres[i][4];
+                                current_shape[0]=4;
+                                current_shape[1]=i;
+                                //cout<<x<<","<<y<<" is in Circle "<<i<<endl;
+                            }
+                        }
+                    }
+
+
+                    for(unsigned long i=0; i<*(pt_shapes+5); i++)
+                    {
+                        if(cylinders[i][5]<current_layer)
+                        {
+                            if( pow((cylinders[i][0]-x),2)+pow((cylinders[i][1]-y),2)<=pow(cylinders[i][3],2) && cylinders[i][4]-cylinders[i][2]<z )
+                            {
+                                current_layer=circles[i][5];
+                                current_shape[0]=5;
+                                current_shape[1]=i;
+                                //cout<<x<<","<<y<<" is in Circle "<<i<<endl;
+                            }
+                        }
+                    }
+                        if(current_layer==1001)
+                        {
+                            e_r[x][y][z][0]=1;
+                            e_r[x][y][z][1]=1;
+                            mu_r[x][y][z][0]=1;
+                            mu_r[x][y][z][1]=1;
+
+                        }
+                        else
+                        {
+                            switch (current_shape[0])
+                            {
+                            case 3:
+                                e_r[x][y][z][0]=rectprisms[current_shape[1]][7];
+                                e_r[x][y][z][1]=rectprisms[current_shape[1]][8];
+                                mu_r[x][y][z][0]=rectprisms[current_shape[1]][9];
+                                mu_r[x][y][z][1]=rectprisms[current_shape[1]][10];
+                                break;
+                            case 4:
+                                e_r[x][y][z][0]=spheres[current_shape[1]][5];
+                                e_r[x][y][z][1]=spheres[current_shape[1]][6];
+                                mu_r[x][y][z][0]=spheres[current_shape[1]][7];
+                                mu_r[x][y][z][1]=spheres[current_shape[1]][8];
+                                break;
+                            case 5:
+                                e_r[x][y][z][0]=cylinders[current_shape[1]][6];
+                                e_r[x][y][z][1]=cylinders[current_shape[1]][7];
+                                mu_r[x][y][z][0]=cylinders[current_shape[1]][8];
+                                mu_r[x][y][z][1]=cylinders[current_shape[1]][9];
+                                break;
+                            default:
+                                break;
+                            }
+                        
+                        }
+                        //cout<<e_r[x][y][0]<<" "<<e_r[x][y][1]<<"**"<<mu_r[x][y][0]<<" "<<mu_r[x][y][1]<<endl;
+
+
+                    
+                }
+            }
+
+        }
+
+
+        for(unsigned long ti=0;ti<n_time_iter;ti++)
+        {   
+
+            
+
+            for(unsigned long x=0;x<grid_size[0]-1;x++)
+            {
+                for(unsigned long y=0;y<grid_size[1]-1;y++)
+                {
+                    for(unsigned long z=0;z<grid_size[2]-1;z++)
+                    {
+                        float mus=Z_0/sqrt_3*mu_r[x][y][z][0];
+                        H_x[x][y][z]-=(E_z[x][y+1][z]-E_z[x][y][z]-E_y[x][y][z+1]+E_y[x][y][z])/mus;
+                        H_y[x][y][z]-=(E_x[x][y][z+1]-E_x[x][y][z]-E_z[x+1][y][z]+E_z[x][y][z])/mus;
+                        H_z[x][y][z]-=(E_y[x+1][y][z]-E_y[x][y][z]-E_x[x][y+1][z]+E_x[x][y][z])/mus;
+
+                    }
+                }
+            }
+
+            for(unsigned long x=0;x<grid_size[0];x++)
+            {
+                for(unsigned long y=0;y<grid_size[1];y++)
+                {   
+                    for(unsigned long z=0;z<grid_size[2];z++)
+                    {
+                        float es=Z_0/sqrt_3/e_r[x][y][z][0];
+                        E_x[x][y][z]+=(H_z[x][y][z]-H_z[x][y-1][z]-H_y[x][y][z]+H_y[x][y][z-1])*es;
+                        E_y[x][y][z]+=(H_x[x][y][z]-H_x[x][y][z-1]-H_z[x][y][z]-H_z[x-1][y][z])*es;
+                        E_z[x][y][z]+=(H_y[x][y][z]-H_y[x-1][y][z]-H_x[x][y][z]+H_x[x][y-1][z])*es;
+                    }
+                }
+            }
+
+            for(unsigned long source=0; source<n_of_energizers; source++)
+            {   
+                float *pt=&energizers[source][0];
+               
+                if(*(pt+2)<=ti&&ti<*(pt+3))
+                {   
+                    int _=*pt;
+                    int __=*(pt+1);
+                    int ___=*(pt+2);
+                    
+                    E_z[_][__][___]+=(*pt+5)*sin(pi_2*ti*dt*(*(pt+6))+(*pt+7));
+                }
+
+            }
+
+            sampler[ti]=E_z[observer[0]][observer[1]][observer[2]];
+
+
+        }
+        io.open(savedir+"/wave.wm");
+        for(unsigned long ti=0; ti<n_time_iter; ti++)
+        {
+            io<<to_string(sampler[ti])<<" ";
+        }
+        io.close();
+
+
     }
-
-
-    
-     
 
     return 0;
 }
