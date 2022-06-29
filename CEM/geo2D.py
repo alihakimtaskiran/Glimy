@@ -44,6 +44,14 @@ class Rectangle(object):
 
     def t(self):
         return 1
+    
+    def isIn(self, point):
+        for i in range(2):
+            if self.__A[i]<=point[i]<=self.__B[i] or self.__B[i]<=point[i]<=self.__A[i]:
+                pass
+            else:
+                return False
+        return True
 
 
 class Circle(object):
@@ -78,11 +86,22 @@ class Circle(object):
         
         self.__A=tuple(A)
         self.__r=r
+        self.__r_2=r**2
         self.__layer=layer
         self.__e=e
         self.__mu=mu
         
     def __repr__(self):
         return f"2 {self.__A[0]} {self.__A[1]} {self.__r} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
+    
     def t(self):
         return 2
+    
+    def isIn(self, point):
+        __=0
+        for i in range(2):
+            __+=(point[i]-self.__A[i])**2
+        if self.__r_2>=__:
+            return True
+        else:
+            return False
