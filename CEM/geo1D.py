@@ -34,6 +34,10 @@ class Line(object):
     def __repr__(self):
         return f"0 {self.__A} {self.__B} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
     
+    def inf(self):
+        self.__layer, self.__e, self.__mu
+    
+    
     def t(self):
         return 0
     
@@ -42,5 +46,3 @@ class Line(object):
             return True
         else:
             False
-    
-        
