@@ -41,6 +41,9 @@ class Rectangle(object):
             __+=str(i)+" "
         __+=f"{self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
         return __
+    
+    def inf(self):
+        self.__layer, self.__e, self.__mu
 
     def t(self):
         return 1
@@ -52,6 +55,8 @@ class Rectangle(object):
             else:
                 return False
         return True
+    
+    
 
 
 class Circle(object):
@@ -94,6 +99,9 @@ class Circle(object):
     def __repr__(self):
         return f"2 {self.__A[0]} {self.__A[1]} {self.__r} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
     
+    def inf(self):
+        self.__layer, self.__e, self.__mu
+        
     def t(self):
         return 2
     
