@@ -48,6 +48,15 @@ class RectPrism(object):
    
     def t(self):
         return 3
+    
+    def isIn(self, point):
+        for i in range(3):
+            if self.__A[i]<=point[i]<=self.__B[i] or self.__B[i]<=point[i]<=self.__A[i]:
+                pass
+            else:
+                return False
+        return True
+                
 
 class Sphere(object):
     def __init__(self, C, r, layer=0, e=1, mu=1):
@@ -79,6 +88,7 @@ class Sphere(object):
 
         self.__C=C
         self.__r=r
+        self.__r_2=r**2
         self.__layer=layer
         self.__e=e
         self.__mu=mu
@@ -88,6 +98,15 @@ class Sphere(object):
 
     def t(self):
         return 4
+    
+    def isIn(self, point):
+        __=0
+        for i in range(3):
+            __+=(point[i]-self.__C[i])**2
+        if self.__r_2>=__:
+            return True
+        else:
+            return False
 
 class Cylinder(object):
     def __init__(self, C, r, h, layer=0, e=1, mu=1):
@@ -126,6 +145,7 @@ class Cylinder(object):
 
         self.__C=C
         self.__r=r
+        self.__r_2=r**2
         self.__h=h
         self.__layer=layer
         self.__e=e
@@ -136,3 +156,15 @@ class Cylinder(object):
 
     def t(self):
         return 5
+    
+    def isIn(self, point):
+        __=0
+        if self.__C[-1]<=point[-1]<=self.__C[-1]+self.__h:
+            for i in range(2):
+                __+=(point[i]-self.__C[i])**2
+            if self.__r_2>=__:
+                return True
+            else:
+                return False
+        else:
+            return False
