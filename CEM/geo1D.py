@@ -37,4 +37,10 @@ class Line(object):
     def t(self):
         return 0
     
+    def isIn(self, point):
+        if self.__A<=point<=self.__B or self.__B<=point<=self.__A:
+            return True
+        else:
+            False
+    
         
