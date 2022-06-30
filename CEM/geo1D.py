@@ -34,8 +34,9 @@ class Line(object):
     def __repr__(self):
         return f"0 {self.__A} {self.__B} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
     
+    @property
     def inf(self):
-        self.__layer, self.__e, self.__mu
+        return self.__layer, self.__e, self.__mu
     
     
     def t(self):
@@ -45,4 +46,6 @@ class Line(object):
         if self.__A<=point<=self.__B or self.__B<=point<=self.__A:
             return True
         else:
-            False
+            return False
+    
+        
