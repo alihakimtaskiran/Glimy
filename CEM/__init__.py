@@ -6,10 +6,6 @@ import CEM.geo3D
 from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
 
-
-__sqrt_1_2=1/(2)**.5
-
-__sqrt_1_3=1/(3)**.5
 c=299792458
 PI_2=pi*2
 __E=None
@@ -21,6 +17,7 @@ __H_mul=None
 __nx, __ny, __nz=None, None, None
 
 class Continuum(object):
+
     def __init__(self, dim, grid_size, ds, ANC=False):
         if not isinstance(dim, int):
             raise TypeError("# of dimensions must be an integer")
@@ -76,7 +73,6 @@ class Continuum(object):
              raise TypeError("Only defined energizers are allowed")
         else:
             __=arg.inf
-            print(__[4]*PI_2*self.__dt)
             if __[0]==0:
                 self.__energizers.append((__[:4]+[__[4]*PI_2*self.__dt,__[5]]))
             
@@ -116,9 +112,10 @@ class Continuum(object):
                     
             
         elif self.__dim==2:
+            __sqrt_1_2=1/(2**.5)
             
             Z=376.730313668*__sqrt_1_2
-            Z_1=__sqrt_1_2/Z
+            Z_1=__sqrt_1_2/376.730313668
             
             self.__E=np.zeros(self.__grid_size)
             self.__H=np.zeros((2,)+self.__grid_size)
@@ -144,9 +141,9 @@ class Continuum(object):
 
 
         elif self.__dim==3:
-            
+            __sqrt_1_3=1/(3)**.5
             Z=376.730313668*__sqrt_1_3
-            Z_1=__sqrt_1_3/Z
+            Z_1=__sqrt_1_3/376.730313668
             
             self.__E=np.zeros((3,)+self.__grid_size)
             self.__H=np.zeros((3,)+self.__grid_size)
@@ -173,8 +170,9 @@ class Continuum(object):
             raise NotImplementedError("Field Arrays couldn't be initialized")
         
             
-    def view_structure(self, *slice_):
-        self.__pre_render()
+    def view_structure(self,bypass=True):
+        if not bypass:
+            self.__pre_render()
         
         if self.__dim==1:
             plt.clf()
@@ -191,6 +189,10 @@ class Continuum(object):
         if self.__dim==1:
             plt.clf()
             plt.plot(self.__E)     
+            plt.show()
+        elif self.__dim==2:
+            plt.clf()
+            plt.imshow(self.__E)     
             plt.show()
 
         
@@ -220,7 +222,8 @@ def Render(field, n_time_steps):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
     params=field.export_for_renderer()
-    cc=8
+    cc=cpu_count()
+    
     
 
     E=params[2]
@@ -229,10 +232,6 @@ def Render(field, n_time_steps):
     H_mul=params[5]
     
     if params[0]==1:
-        iterator_E=[i for i in range(params[1][0])]
-        iterator_H=iterator_E[:-1]
-        
-        
 
         for t in range(n_time_steps):
             for j in range(params[1][0]-1):
@@ -244,10 +243,29 @@ def Render(field, n_time_steps):
             
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
-                    E[source[1][0]]+=source[3]*np.sin(source[4]*t+source[5])
+                    E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
                     
         field.load_from_renderer(E, H)
-            
+        
+    elif params[0]==2:
+        for t in range(n_time_steps):
+            for x in range(params[1][0]-1):
+                for y in range(params[1][1]-1):
+                    H[0][x][y]-=(E[x][y+1]-E[x][y])*H_mul[x][y]
+                    H[1][x][y]+=(E[x+1][y]-E[x][y])*H_mul[x][y]
+            for x in range(params[1][0]):
+                for y in range(params[1][1]):
+                    E[x][y]+=(H[1][x][y]-H[1][x-1][y]-H[0][x][y]+H[0][x][y-1])*E_mul[x][y]
+                    
+            for source in params[6]:
+                if source[0]==0 and source[2][0]<=t<=source[2][1]:
+                    E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
+                  
+  
+                    
+        
+        field.load_from_renderer(E, H)
+                    
         
 
 class DotSource(object):
@@ -265,7 +283,6 @@ class DotSource(object):
         for i in self.__presence:
             __+=str(i)+" "
         __+=f"Dot Source Amplitude:{self.__amplitude} Frequency:{self.__frequency} Phase:{self.__phase}"
-        
         return __
 
     @property
