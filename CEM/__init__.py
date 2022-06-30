@@ -141,11 +141,8 @@ class Continuum(object):
                             self.__E_mul[i][j]=Z/self.__geometries[prior[-1]].inf[1]
                             
             plt.imshow(self.__E_mul)
-                        
-            
-            
-            
-            
+
+
         elif self.__dim==3:
             
             Z=376.730313668*__sqrt_1_3
@@ -211,7 +208,9 @@ def __update_H_1D(x):
 def __update_E_1D(x):
     return (__H[x]-__H[x-1])*__E_mul[x]
             
-
+def __update_E_2D(x,y):
+    return (__H[1][x][y]-__H[1][x-1][y]-__H[0][x][y]+__H[0][x][y-1])*__E_mul[x][y]
+        
 
 def Render(field, n_time_steps):
     if not isinstance(field, Continuum):
@@ -221,17 +220,13 @@ def Render(field, n_time_steps):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
     params=field.export_for_renderer()
-    cc=cpu_count()
+    cc=8
     
-    global __E
-    global __H
-    global __H_mul
-    global __E_mul
-    
-    __E=params[2]
-    __H=params[3]
-    __E_mul=params[4]
-    __H_mul=params[5]
+
+    E=params[2]
+    H=params[3]
+    E_mul=params[4]
+    H_mul=params[5]
     
     if params[0]==1:
         iterator_E=[i for i in range(params[1][0])]
@@ -240,17 +235,18 @@ def Render(field, n_time_steps):
         
 
         for t in range(n_time_steps):
-            mpu=Pool(cc)
-            __H[:-1]+=np.array(mpu.map(__update_H_1D, iterator_H))
-            mpu=Pool(cc)
-            __E+=np.array(mpu.map(__update_E_1D, iterator_E))
+            for j in range(params[1][0]-1):
+                H[j]+=(E[j+1]-E[j])*H_mul[j]
+            
+            for j in range(params[1][0]):
+                E[j]+=(H[j]-H[j-1])*E_mul[j]
             
             
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
-                    __E[source[1][0]]+=source[3]*np.sin(source[4]*t+source[5])
+                    E[source[1][0]]+=source[3]*np.sin(source[4]*t+source[5])
                     
-        field.load_from_renderer(__E, __H)
+        field.load_from_renderer(E, H)
             
         
 
