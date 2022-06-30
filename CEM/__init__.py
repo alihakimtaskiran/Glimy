@@ -3,12 +3,20 @@ from math import sin,pi
 import CEM.geo1D
 import CEM.geo2D
 import CEM.geo3D
+from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
 
 
 
 c=299792458
 PI_2=pi*2
+__E=None
+__H=None
+
+__E_mul=None
+__H_mul=None
+
+__nx, __ny, __nz=None, None, None
 
 class Continuum(object):
 
@@ -164,7 +172,9 @@ class Continuum(object):
             raise NotImplementedError("Field Arrays couldn't be initialized")
         
             
-    def view_structure(self,bypass=True):
+    def view_structure(self,bypass=True, *kwargs):
+        print(kwargs)
+
         if not bypass:
             self.__pre_render()
         
@@ -176,18 +186,43 @@ class Continuum(object):
             plt.clf()
             plt.imshow(self.__E_mul)
             plt.show()
-
+            
+        elif self.__dim==3:
+            plt.clf()
+            if kwargs[0]==0:
+                plt.imshow(self.__E[kwargs[1], :, :])   
+            elif kwargs[0]==1:
+                plt.imshow(self.__E[:, kwargs[1], :])
+            elif kwargs[0]==2:
+                plt.imshow(self.__E[:, :, kwargs[1]])
+            plt.show()
             
             
-    def view_field(self):
+    def view_field(self, *kwargs):
+        print(kwargs)
         if self.__dim==1:
             plt.clf()
             plt.plot(self.__E)     
             plt.show()
+            
         elif self.__dim==2:
             plt.clf()
             plt.imshow(self.__E)     
             plt.show()
+            
+        elif self.__dim==3:
+            plt.clf()
+            if kwargs[0]==0:
+                plt.imshow(self.__E[kwargs[1], :, :])   
+            elif kwargs[0]==1:
+                plt.imshow(self.__E[:, kwargs[1], :])
+            elif kwargs[0]==2:
+                plt.imshow(self.__E[:, :, kwargs[1]])
+            
+            
+            plt.show()
+            
+            
 
         
     def export_for_renderer(self):
@@ -197,6 +232,7 @@ class Continuum(object):
     def load_from_renderer(self, E, H):
         self.__E=E
         self.__H=H
+
 
 def __update_H_1D(x):
     return (__E[x+1]-__E[x])*__H_mul[x]
@@ -215,6 +251,9 @@ def Render(field, n_time_steps):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
     params=field.export_for_renderer()
+    cc=cpu_count()
+    
+    
 
     E=params[2]
     H=params[3]
@@ -231,6 +270,7 @@ def Render(field, n_time_steps):
             
             for j in range(params[1][0]):
                 E[j]+=(H[j]-H[j-1])*E_mul[j]
+            
             
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
@@ -255,7 +295,7 @@ def Render(field, n_time_steps):
         field.load_from_renderer(E, H)
         
     elif params[0]==3:
-        for t in range(n_time_iters): 
+        for t in range(n_time_steps): 
         
             for x in range(params[1][0]-1):
                 for y in range(params[1][1]-1):
@@ -276,6 +316,9 @@ def Render(field, n_time_steps):
                     E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
             
             field.load_from_renderer(E, H)
+
+                    
+        
 
 class DotSource(object):
     def __init__(self, location, presence ,amplitude, frequency, phase=0):
