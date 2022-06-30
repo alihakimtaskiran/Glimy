@@ -46,8 +46,9 @@ class RectPrism(object):
             __+=str(i)+" "
         return __+f"{self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
     
+    @property
     def inf(self):
-        self.__layer, self.__e, self.__mu
+        return self.__layer, self.__e, self.__mu
         
     def t(self):
         return 3
@@ -99,8 +100,9 @@ class Sphere(object):
     def __repr__(self):
         return f"4 {self.__C[0]} {self.__C[1]} {self.__C[2]} {self.__r} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
     
+    @property
     def inf(self):
-        self.__layer, self.__e, self.__mu
+        return self.__layer, self.__e, self.__mu
         
     def t(self):
         return 4
@@ -160,8 +162,9 @@ class Cylinder(object):
     def __repr__(self):
         return f"5 {self.__C[0]} {self.__C[1]} {self.__C[2]} {self.__r} {self.__h} {self.__layer} {self.__e.real} {self.__e.imag} {self.__mu.real} {self.__mu.imag}"
     
+    @property
     def inf(self):
-        self.__layer, self.__e, self.__mu
+        return self.__layer, self.__e, self.__mu
         
     def t(self):
         return 5
