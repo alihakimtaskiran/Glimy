@@ -3,18 +3,12 @@ from math import sin,pi
 import CEM.geo1D
 import CEM.geo2D
 import CEM.geo3D
-from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
+
+
 
 c=299792458
 PI_2=pi*2
-__E=None
-__H=None
-
-__E_mul=None
-__H_mul=None
-
-__nx, __ny, __nz=None, None, None
 
 class Continuum(object):
 
@@ -204,7 +198,6 @@ class Continuum(object):
         self.__E=E
         self.__H=H
 
-
 def __update_H_1D(x):
     return (__E[x+1]-__E[x])*__H_mul[x]
 def __update_E_1D(x):
@@ -222,9 +215,6 @@ def Render(field, n_time_steps):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
     params=field.export_for_renderer()
-    cc=cpu_count()
-    
-    
 
     E=params[2]
     H=params[3]
@@ -232,6 +222,8 @@ def Render(field, n_time_steps):
     H_mul=params[5]
     
     if params[0]==1:
+        
+        
 
         for t in range(n_time_steps):
             for j in range(params[1][0]-1):
@@ -239,7 +231,6 @@ def Render(field, n_time_steps):
             
             for j in range(params[1][0]):
                 E[j]+=(H[j]-H[j-1])*E_mul[j]
-            
             
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
@@ -260,13 +251,31 @@ def Render(field, n_time_steps):
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
-                  
-  
-                    
         
         field.load_from_renderer(E, H)
-                    
         
+    elif params[0]==3:
+        for t in range(n_time_iters): 
+        
+            for x in range(params[1][0]-1):
+                for y in range(params[1][1]-1):
+                    for z in range(params[1][2]-1):
+                        H[0][x][y][z]-=(E[2][x][y+1][z]-E[2][x][y][z]-E[1][x][y][z+1]+E[1][x][y][z])/377/(3**.5)
+                        H[1][x][y][z]-=(E[0][x][y][z+1]-E[0][x][y][z]-E[2][x+1][y][z]+E[2][x][y][z])/377/(3**.5)
+                        H[2][x][y][z]-=(E[1][x+1][y][z]-E[1][x][y][z]-E[0][x][y+1][z]+E[0][x][y][z])/377/(3**.5)
+        
+            for x in range(0,params[1][0]):
+                for y in range(0,params[1][1]):
+                    for z in range(0,params[1][2]):
+                        E[0][x][y][z]+=(H[2][x][y][z]-H[2][x][y-1][z]-H[1][x][y][z]+H[1][x][y][z-1])*377/(3**.5)
+                        E[1][x][y][z]+=(H[0][x][y][z]-H[0][x][y][z-1]-H[2][x][y][z]-H[2][x-1][y][z])*377/(3**.5)
+                        E[2][x][y][z]+=(H[1][x][y][z]-H[1][x-1][y][z]-H[0][x][y][z]+H[0][x][y-1][z])*377/(3**.5)
+                        
+            for source in params[6]:
+                if source[0]==0 and source[2][0]<=t<=source[2][1]:
+                    E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
+            
+            field.load_from_renderer(E, H)
 
 class DotSource(object):
     def __init__(self, location, presence ,amplitude, frequency, phase=0):
