@@ -131,13 +131,14 @@ class Continuum(object):
                     for o in range(self.__n_of_objects):
                         if self.__geometries[o].isIn((i,j)) and self.__geometries[o].inf[0]<prior[0]:
                             prior=self.__geometries[o].inf[0],o
-                        if prior[-1]==-1:
-                            self.__H_mul[i][j]=Z_1
-                            self.__E_mul[i][j]=Z
+                            
+                    if prior[-1]==-1:
+                        self.__H_mul[i][j]=Z_1
+                        self.__E_mul[i][j]=Z
 
-                        else:
-                            self.__H_mul[i][j]=Z_1/self.__geometries[prior[-1]].inf[-1]
-                            self.__E_mul[i][j]=Z/self.__geometries[prior[-1]].inf[1]
+                    else:
+                        self.__H_mul[i][j]=Z_1/self.__geometries[prior[-1]].inf[-1]
+                        self.__E_mul[i][j]=Z/self.__geometries[prior[-1]].inf[1]
                             
             plt.imshow(self.__E_mul)
 
@@ -160,20 +161,19 @@ class Continuum(object):
                         for o in range(self.__n_of_objects):
                             if self.__geometries[o].isIn((i,j,k)) and self.__geometries[o].inf[0]<prior[0]:
                                 prior=self.__geometries[o].inf[0],o
-                            if prior[-1]==-1:
-                                self.__H_mul[i][j][k]=Z_1
-                                self.__E_mul[i][j][k]=Z
+                        if prior[-1]==-1:
+                            self.__H_mul[i][j][k]=Z_1
+                            self.__E_mul[i][j][k]=Z
     
-                            else:
-                                self.__H_mul[i][j][k]=Z_1/self.__geometries[prior[-1]].inf[-1]
-                                self.__E_mul[i][j][k]=Z/self.__geometries[prior[-1]].inf[1]
+                        else:
+                            self.__H_mul[i][j][k]=Z_1/self.__geometries[prior[-1]].inf[-1]
+                            self.__E_mul[i][j][k]=Z/self.__geometries[prior[-1]].inf[1]
                             
         else:
             raise NotImplementedError("Field Arrays couldn't be initialized")
         
             
     def view_structure(self,bypass=True, *kwargs):
-        print(kwargs)
 
         if not bypass:
             self.__pre_render()
@@ -190,11 +190,11 @@ class Continuum(object):
         elif self.__dim==3:
             plt.clf()
             if kwargs[0]==0:
-                plt.imshow(self.__E[kwargs[1], :, :])   
+                plt.imshow(self.__E_mul[kwargs[1], :, :])   
             elif kwargs[0]==1:
-                plt.imshow(self.__E[:, kwargs[1], :])
+                plt.imshow(self.__E_mul[:, kwargs[1], :])
             elif kwargs[0]==2:
-                plt.imshow(self.__E[:, :, kwargs[1]])
+                plt.imshow(self.__E_mul[:, :, kwargs[1]])
             plt.show()
             
             
@@ -232,15 +232,6 @@ class Continuum(object):
     def load_from_renderer(self, E, H):
         self.__E=E
         self.__H=H
-
-
-def __update_H_1D(x):
-    return (__E[x+1]-__E[x])*__H_mul[x]
-def __update_E_1D(x):
-    return (__H[x]-__H[x-1])*__E_mul[x]
-            
-def __update_E_2D(x,y):
-    return (__H[1][x][y]-__H[1][x-1][y]-__H[0][x][y]+__H[0][x][y-1])*__E_mul[x][y]
         
 
 def Render(field, n_time_steps):
