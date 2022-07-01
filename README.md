@@ -1,19 +1,22 @@
-# CEM
-### Computational Electromagnetics
-  The modern electromagnetics analysis demanding numerical sollutions rather than analytical sollutions. 
+# Glimy
+## FDTD Simulator
+  The electromagnetic field.. Interacts with our reality and the reason that we continue to live.
   <pre>
   
 |----Continuum(object)----|
 |                         |---__init__(dim,grid_size,ds,ANC=False)
 |                         |---add(arg)
 |                         |---add_energizer(arg)
-|                         |---__pre_render()
 |                         |---view_structure(bypass=True,*kwargs)
 |                         |---view_field(*kwargs)
 |                         |---export_for_renderer()
 |                         |---load_from_renderer(E,H)
 |                         |---export_E_field()
-|                         |---Render(field,n_time_steps)
+|
+|
+|
+|---Render(field,n_time_steps)
+|
 |
 |
 |----DotSource(object)----|
