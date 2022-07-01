@@ -76,6 +76,13 @@ class Continuum(object):
         else:
             __=arg.inf
             if __[0]==0:
+                if len(__[1])!=self.__dim:
+                    raise ValueError("DotSource must live in the same dimensional space with Continuum")
+                for i in range(self.__dim):
+                    if self.__grid_size[i]<=__[1][i]:
+                        raise ValueError("Location of the DotSource must be in the grid")
+                
+
                 self.__energizers.append((__[:4]+[__[4]*PI_2*self.__dt,__[5]]))
             
         
@@ -213,16 +220,14 @@ class Continuum(object):
         elif self.__dim==3:
             plt.clf()
             if kwargs[0]==0:
-                plt.imshow(self.__E[kwargs[1], :, :])   
+                plt.imshow(self.__E[2,kwargs[1], :, :])   
             elif kwargs[0]==1:
-                plt.imshow(self.__E[:, kwargs[1], :])
+                plt.imshow(self.__E[2,:, kwargs[1], :])
             elif kwargs[0]==2:
-                plt.imshow(self.__E[:, :, kwargs[1]])
+                plt.imshow(self.__E[2,:, :, kwargs[1]])
             
             
             plt.show()
-            
-            
 
         
     def export_for_renderer(self):
@@ -233,6 +238,8 @@ class Continuum(object):
         self.__E=E
         self.__H=H
         
+    def export_E_field(self):
+        return self.__E
 
 def Render(field, n_time_steps):
     if not isinstance(field, Continuum):
@@ -291,22 +298,24 @@ def Render(field, n_time_steps):
             for x in range(params[1][0]-1):
                 for y in range(params[1][1]-1):
                     for z in range(params[1][2]-1):
-                        H[0][x][y][z]-=(E[2][x][y+1][z]-E[2][x][y][z]-E[1][x][y][z+1]+E[1][x][y][z])/377/(3**.5)
-                        H[1][x][y][z]-=(E[0][x][y][z+1]-E[0][x][y][z]-E[2][x+1][y][z]+E[2][x][y][z])/377/(3**.5)
-                        H[2][x][y][z]-=(E[1][x+1][y][z]-E[1][x][y][z]-E[0][x][y+1][z]+E[0][x][y][z])/377/(3**.5)
+                        H[0][x][y][z]-=(E[2][x][y+1][z]-E[2][x][y][z]-E[1][x][y][z+1]+E[1][x][y][z])*H_mul[x][y][z]
+                        H[1][x][y][z]-=(E[0][x][y][z+1]-E[0][x][y][z]-E[2][x+1][y][z]+E[2][x][y][z])*H_mul[x][y][z]
+                        H[2][x][y][z]-=(E[1][x+1][y][z]-E[1][x][y][z]-E[0][x][y+1][z]+E[0][x][y][z])*H_mul[x][y][z]
         
             for x in range(0,params[1][0]):
                 for y in range(0,params[1][1]):
                     for z in range(0,params[1][2]):
-                        E[0][x][y][z]+=(H[2][x][y][z]-H[2][x][y-1][z]-H[1][x][y][z]+H[1][x][y][z-1])*377/(3**.5)
-                        E[1][x][y][z]+=(H[0][x][y][z]-H[0][x][y][z-1]-H[2][x][y][z]-H[2][x-1][y][z])*377/(3**.5)
-                        E[2][x][y][z]+=(H[1][x][y][z]-H[1][x-1][y][z]-H[0][x][y][z]+H[0][x][y-1][z])*377/(3**.5)
-                        
+                        E[0][x][y][z]+=(H[2][x][y][z]-H[2][x][y-1][z]-H[1][x][y][z]+H[1][x][y][z-1])*E_mul[x][y][z]
+                        E[1][x][y][z]+=(H[0][x][y][z]-H[0][x][y][z-1]-H[2][x][y][z]-H[2][x-1][y][z])*E_mul[x][y][z]
+                        E[2][x][y][z]+=(H[1][x][y][z]-H[1][x-1][y][z]-H[0][x][y][z]+H[0][x][y-1][z])*E_mul[x][y][z]
+            
+            
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
-                    E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
-            
-            field.load_from_renderer(E, H)
+                    E[2][source[1]]+=source[3]*np.sin(source[4]*t+source[5])
+        
+        plt.plot(E[2,10,:,0])
+        field.load_from_renderer(E, H)
 
                     
         
