@@ -1,7 +1,9 @@
 # Glimy
 ## FDTD Simulator
-  The electromagnetic field.. Interacts with our reality and the reason that we continue to live.
-  <pre>
+  The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
+
+
+<pre>
   
 |----Continuum(object)----|
 |                         |---__init__(dim,grid_size,ds,ANC=False)
