@@ -2,7 +2,11 @@
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
 
+
+
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/1.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/2.png)
+
+![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
 
 
 ### How to Use
