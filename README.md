@@ -105,10 +105,10 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
 ### view_structure(bypass=True,*kwargs)
   You may view the grid structure
   - **bypass** : If it is True, it don't render the structure before view.
-  - ** \*kwargs ** : If the Continuum is 1D or 2D just ignore it. If it is 3D, it takes two variable to view. first one is axis, second one slice.
+  - <b> *kwargs </b> : If the Continuum is 1D or 2D just ignore it. If it is 3D, it takes two variable to view. first one is axis, second one slice.
 ### view_field(*kwargs)
   You may see Electric Field.
-  - ** \*kwargs ** : If the Continuum is 1D or 2D just ignore it. If it is 3D, it takes two variable to view. first one is axis, second one slice.
+  - <b> *kwargs </b> : If the Continuum is 1D or 2D just ignore it. If it is 3D, it takes two variable to view. first one is axis, second one slice.
 
 ### export_E_field()
   Get Electric Field array
