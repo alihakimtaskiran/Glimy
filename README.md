@@ -94,7 +94,7 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
   ## Continuum(dim,grid_size,ds)
    Creates electromagnetic field with given dimensions and grid size. Grid spacing is introduced with ds.
    - **dim** : Number of dimensions of the Continuum. It may take 1, 2 or 3.
-   - **grid_size** : Deines grid cell count per axis. It may take a tuple orlist. It's lenghts must be the same as # of dimensions.
+   - **grid_size** : Defines grid cell count per axis. It may take a tuple orlist. It's lenghts must be the same as # of dimensions.
    - **ds** : Length of a edge of a grid cell. It may take a float or integer. All units are SI.
    
 ### add(arg)
