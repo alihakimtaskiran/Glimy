@@ -88,11 +88,19 @@
    
 ### add(arg)
   Adds new geometries into the Continuum.
-  - **arg** : It may take geometry objects provided with **geo1D**, **geo2D** and **geo3D** modules or tuple or list of them. Added geometries must be compatible with the Continuum. 1D Continuum only accepts **geo1D.Line**; 2D Continuum only accepts **geo2D.Rectangle** and **geo2D.Circle**; 3D Continuum only accepts **geo3D.RectPrism**, **geo3D.Sphere** and **geo3D.Cylinder**
+  - **arg** : It may take geometry objects provided with **geo1D**, **geo2D** and **geo3D** modules or tuple or list of them. Added geometries must be compatible with the Continuum. 1D Continuum only accepts **geo1D.Line**; 2D Continuum only accepts **geo2D.Rectangle** and **geo2D.Circle**; 3D Continuum only accepts **geo3D.RectPrism**, **geo3D.Sphere** and **geo3D.Cylinder**.
 ### add_energizer(arg)
+  - **arg** : It may take DotSource or list or tuple of it. Location of DotSource must be in grid of Continuum
 ### view_structure(bypass=True,*kwargs)
+  You may view the grid structure
+  - **bypass** : If it is True, it don't render the structure before view.
+  - ** \*kwargs ** : If the Continuum is 1D or 2D just ignore it. If it is 3D, it takes two variable to view. first one is axis, second one slice.
 ### view_field(*kwargs)
+  You may see Electric Field.
+  - ** \*kwargs ** : If the Continuum is 1D or 2D just ignore it. If it is 3D, it takes two variable to view. first one is axis, second one slice.
+
 ### export_E_field()
+  Get Electric Field array
      
 <hr/> 
 
