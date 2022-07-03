@@ -38,7 +38,8 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
 |                         
 | 
 | 
-|----geo1D(module)--------|----Line(object)---------|
+|----geo1D(module)--------|
+|                         |----Line(object)---------|
 |                                                   |---__init__(A, B, layer, e=1, mu=1)
 |                                                   |---__repr__()
 |                                                   |---inf()
@@ -47,7 +48,8 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
 | 
 | 
 |                                                   
-|----geo2D(module)--------|----Rectangle(object)----|
+|----geo2D(module)--------|
+|                         |----Rectangle(object)----|
 |                         |                         |---__init__(A,B,layer,e=1,mu=1)
 |                         |                         |---__repr__()
 |                         |                         |---inf()
@@ -64,7 +66,8 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
 |
 |
 |
-|----geo3D(module)--------|----RectPrism(object)----|
+|----geo3D(module)--------|
+|                         |----RectPrism(object)----|
                           |                         |---__init__(A,B,layer=0,e=1,mu=1)
                           |                         |---__repr__()
                           |                         |---inf()
