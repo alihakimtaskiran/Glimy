@@ -2,7 +2,14 @@
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
 
+![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/1.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/2.png)
 
+
+### How to Use
+Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM) folder under working directory. Since C++ renderer engine is under construction, you may delete them.
+
+
+### Tree
 <pre>
 |----Continuum(object)----|
 |                         |---__init__(dim,grid_size,ds)
