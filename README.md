@@ -4,9 +4,8 @@
 
 
 <pre>
-  
 |----Continuum(object)----|
-|                         |---__init__(dim,grid_size,ds,ANC=False)
+|                         |---__init__(dim,grid_size,ds)
 |                         |---add(arg)
 |                         |---add_energizer(arg)
 |                         |---view_structure(bypass=True,*kwargs)
@@ -76,5 +75,26 @@
                                                     |---inf()
                                                     |---t()
                                                     |---isIn(point)
- 
   </pre>
+  
+  ## Documentation
+  
+  ### Continuum(dim,grid_size,ds)
+     
+     
+     
+  ### Render(field,n_time_steps)
+  
+  
+  ### DotSource(location,presence,amplitude,frequency,phase=0)
+  
+  ### geo1D.Line(A, B, layer, e=1, mu=1)
+  
+  ### geo2D.Rectangle(A, B, layer, e=1, mu=1)
+  
+  ### geo2D.Circle(A,r,layer,e=1,mu=1)
+  ### geo3D.(A, B, layer, e=1, mu=1)
+  ### geo3D.Sphere(C,r,layer=0,e=1,mu=1)
+  ### geo3D.Cylinder(C,r,h,layer=0,e=1,mu=1)
+  
+  
