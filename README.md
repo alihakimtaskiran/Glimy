@@ -78,14 +78,24 @@
   </pre>
   
   # Documentation
+  <hr/>
   
   ## Continuum(dim,grid_size,ds)
    Creates electromagnetic field with given dimensions and grid size. Grid spacing is introduced with ds.
    - **dim** : Number of dimensions of the Continuum. It may take 1, 2 or 3.
    - **grid_size** : Deines grid cell count per axis. It may take a tuple orlist. It's lenghts must be the same as # of dimensions.
    - **ds** : Length of a edge of a grid cell. It may take a float or integer. All units are SI.
+   
+### add(arg)
+  Adds new geometries into the Continuum.
+  - **arg** : It may take geometry objects provided with **geo1D**, **geo2D** and **geo3D** modules or tuple or list of them. Added geometries must be compatible with the Continuum. 1D Continuum only accepts **geo1D.Line**; 2D Continuum only accepts **geo2D.Rectangle** and **geo2D.Circle**; 3D Continuum only accepts **geo3D.RectPrism**, **geo3D.Sphere** and **geo3D.Cylinder**
+### add_energizer(arg)
+### view_structure(bypass=True,*kwargs)
+### view_field(*kwargs)
+### export_E_field()
      
-     
+<hr/> 
+
   ## Render(field,n_time_steps)
    Executes FDTD calculations on a Continuum object.
    - **field** : It must take Continuum object. It s the field that evolved through time.
