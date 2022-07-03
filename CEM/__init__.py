@@ -7,7 +7,6 @@ from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
 
 
-
 c=299792458
 PI_2=pi*2
 __E=None
@@ -44,7 +43,7 @@ class Continuum(object):
         self.__ANC=ANC
         self.__geometries=[]
         self.__ds=ds
-        self.__dt=ds/c
+        self.__dt=ds/c/(dim**.5)
         self.__energizers=[]
         self.__n_of_objects=0
         
@@ -317,9 +316,7 @@ def Render(field, n_time_steps):
         plt.plot(E[2,10,:,0])
         field.load_from_renderer(E, H)
 
-                    
         
-
 class DotSource(object):
     def __init__(self, location, presence ,amplitude, frequency, phase=0):
         self.__location=location
