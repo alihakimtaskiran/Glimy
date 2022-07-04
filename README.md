@@ -67,7 +67,7 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
 |
 |
 |----geo3D(module)--------|
-|                         |----RectPrism(object)----|
+                          |----RectPrism(object)----|
                           |                         |---__init__(A,B,layer=0,e=1,mu=1)
                           |                         |---__repr__()
                           |                         |---inf()
