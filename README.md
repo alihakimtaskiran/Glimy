@@ -1,6 +1,7 @@
 # Glimy
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
+  Moreover, Glimmy-FDTD can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of Mach-Einstein-Dicke.
 
 
 ### ![Waveguide Example](examples/1-Dielectric-Wave-Guide.py):
