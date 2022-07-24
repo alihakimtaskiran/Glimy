@@ -6,7 +6,6 @@ import CEM.geo3D
 import CEM.curved
 from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
-import sys
 
 
 G=6.6743e-11
