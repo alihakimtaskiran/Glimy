@@ -105,9 +105,7 @@ class Continuum(object):
             self.__curved=curved
         else:
             raise TypeError("Continuum can be curved or not")
-    
-    def pre_render(self):
-        self.__pre_render()
+  
         
     def __pre_render(self):
         
