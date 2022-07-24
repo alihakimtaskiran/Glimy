@@ -5,7 +5,7 @@
 
 
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/1.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/2.png)
-### ![Waveguide Example](example.py):
+### ![Waveguide Example](examples/example.py):
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
 
 
