@@ -36,59 +36,64 @@ Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM
 |                         |---__repr__()
 |                         |---inf()
 |                         
-| 
+|
+|----curved(module)-------|
+|                         |----SingularCelestial(object)---|
+|                                                          |---__init__(location, mass)
+|                                                          |---export
+|
 | 
 |----geo1D(module)--------|
-|                         |----Line(object)---------|
-|                                                   |---__init__(A, B, layer, e=1, mu=1)
-|                                                   |---__repr__()
-|                                                   |---inf()
-|                                                   |---t()
-|                                                   |---isIn(point)
+|                         |----Line(object)----------------|
+|                                                          |---__init__(A, B, layer, e=1, mu=1)
+|                                                          |---__repr__()
+|                                                          |---inf()
+|                                                          |---t()
+|                                                          |---isIn(point)
 | 
 | 
 |                                                   
 |----geo2D(module)--------|
-|                         |----Rectangle(object)----|
-|                         |                         |---__init__(A,B,layer,e=1,mu=1)
-|                         |                         |---__repr__()
-|                         |                         |---inf()
-|                         |                         |---t()
-|                         |                         |---isIn(point)
+|                         |----Rectangle(object)------------|
+|                         |                                 |---__init__(A,B,layer,e=1,mu=1)
+|                         |                                 |---__repr__()
+|                         |                                 |---inf()
+|                         |                                 |---t()
+|                         |                                 |---isIn(point)
 |                         |
 |                         |
-|                         |----Circle(object)-------|
-|                                                   |---__init__(A,r,layer,e=1,mu=1)
-|                                                   |---__repr__()
-|                                                   |---inf()
-|                                                   |---t()
-|                                                   |---isIn(point)
+|                         |----Circle(object)---------------|
+|                                                           |---__init__(A,r,layer,e=1,mu=1)
+|                                                           |---__repr__()
+|                                                           |---inf()
+|                                                           |---t()
+|                                                           |---isIn(point)
 |
 |
 |
 |----geo3D(module)--------|
-                          |----RectPrism(object)----|
-                          |                         |---__init__(A,B,layer=0,e=1,mu=1)
-                          |                         |---__repr__()
-                          |                         |---inf()
-                          |                         |---t()
-                          |                         |---isIn(point)
+                          |----RectPrism(object)------------|
+                          |                                 |---__init__(A,B,layer=0,e=1,mu=1)
+                          |                                 |---__repr__()
+                          |                                 |---inf()
+                          |                                 |---t()
+                          |                                 |---isIn(point)
                           |
                           |
-                          |----Sphere(object)-------|
-                          |                         |---__init__(C,r,layer=0,e=1,mu=1)
-                          |                         |---__repr__()
-                          |                         |---inf()
-                          |                         |---t()
-                          |                         |---isIn(point)
+                          |----Sphere(object)---------------|
+                          |                                 |---__init__(C,r,layer=0,e=1,mu=1)
+                          |                                 |---__repr__()
+                          |                                 |---inf()
+                          |                                 |---t()
+                          |                                 |---isIn(point)
+                          |        
                           |
-                          |
-                          |----Cylinder(object)-----|
-                                                    |---__init__(C,r,h,layer=0,e=1,mu=1)
-                                                    |---__repr__()
-                                                    |---inf()
-                                                    |---t()
-                                                    |---isIn(point)
+                          |----Cylinder(object)-------------|
+                                                            |---__init__(C,r,h,layer=0,e=1,mu=1)
+                                                            |---__repr__()
+                                                            |---inf()
+                                                            |---t()
+                                                            |---isIn(point)
   </pre>
   
   # Documentation
