@@ -3,11 +3,15 @@ from math import sin,pi
 import CEM.geo1D
 import CEM.geo2D
 import CEM.geo3D
+import CEM.curved
 from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
+import sys
 
 
+G=6.6743e-11
 c=299792458
+c_2=c**2
 PI_2=pi*2
 __E=None
 __H=None
@@ -19,7 +23,7 @@ __nx, __ny, __nz=None, None, None
 
 class Continuum(object):
 
-    def __init__(self, dim, grid_size, ds, ANC=False):
+    def __init__(self, dim, grid_size, ds):
         if not isinstance(dim, int):
             raise TypeError("# of dimensions must be an integer")
         if not dim in {1,2,3}:
@@ -33,37 +37,50 @@ class Continuum(object):
             
         if not isinstance(ds, (int,float)):
             raise TypeError("ds(Δs) must be a float or int")
-            
-        if not isinstance(ANC, bool):
-            raise TypeError("ANC can exist or not. Never both")
-
-
+        
         self.__dim=dim
         self.__grid_size=grid_size
-        self.__ANC=ANC
         self.__geometries=[]
         self.__ds=ds
         self.__dt=ds/c/(dim**.5)
         self.__energizers=[]
         self.__n_of_objects=0
-        
+        self.__curved=False
+        self.__celestials=[]
+
         
     def add(self, arg):
         if isinstance(arg, (set, tuple, list)):
             for element in arg:
                 self.add(element)
-        elif self.__dim==1 and not isinstance(arg, (geo1D.Line,)):
-            raise TypeError("In 1-D, only lines are allowed")
-        
-        elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle)):
-            raise TypeError("In 2-D, only defined geometries are allowed")
-        
-        elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere)):
-            raise TypeError("In 3-D, only defined geometries are allowed")
         
         else:
-            self.__geometries.append(arg)
-            self.__n_of_objects+=1
+                
+            if self.__curved:
+                if not isinstance(arg, curved.SingularCelestial):
+                    raise TypeError("Only defined Celestial objects are allowed")
+                elif not arg.export[0]==self.__dim:
+                    raise ValueError("Celestial must live in the same dimensions with the Continuum")
+                else:
+                    self.__celestials.append(arg)
+                      
+            
+            else:
+                if self.__dim==1 and not isinstance(arg, (geo1D.Line,)):
+                    raise TypeError("In 1-D, only lines are allowed")
+                
+                elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle)):
+                    raise TypeError("In 2-D, only defined geometries are allowed")
+                
+                elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere)):
+                    raise TypeError("In 3-D, only defined geometries are allowed")
+                
+                else:
+                    self.__geometries.append(arg)
+                    self.__n_of_objects+=1
+                
+       
+            
         
         
     def add_energizer(self, arg):
@@ -84,99 +101,166 @@ class Continuum(object):
 
                 self.__energizers.append((__[:4]+[__[4]*PI_2*self.__dt,__[5]]))
             
+    def set_curve(self, curved):
+        if type(curved)==bool:
+            self.__curved=curved
+        else:
+            raise TypeError("Continuum can be curved or not")
+    
+    def pre_render(self):
+        self.__pre_render()
         
     def __pre_render(self):
-  
-            
         
-        if self.__dim==1:
-            
-            Z=376.730313668
-            Z_1=1/Z
-            
-            
-            self.__E=np.zeros(self.__grid_size)
-            self.__H=np.zeros(self.__grid_size)
-            
-            self.__H_mul=np.empty(self.__grid_size)
-            self.__E_mul=np.empty(self.__grid_size)
-            
-            
-            for i in range(self.__grid_size[0]):
-                prior=1000,-1
-                for o in range(self.__n_of_objects):
-                    if self.__geometries[o].isIn(i) and self.__geometries[o].inf[0]<prior[0]:
-                        prior=self.__geometries[o].inf[0],o
-                        
-                    if prior[-1]==-1:
-                        self.__H_mul[i]=Z_1
-                        self.__E_mul[i]=Z
+        if self.__curved:
+            if self.__dim==1:
 
+                Z=376.730313668
+                Z_1=1/Z
+                
+                
+                self.__E=np.zeros(self.__grid_size)
+                self.__H=np.zeros(self.__grid_size)
+                
+                self.__H_mul=np.empty(self.__grid_size)
+                self.__E_mul=np.empty(self.__grid_size)
+                
+                l_c=len(self.__celestials)
+                for i in range(self.__grid_size[0]):
+                    if l_c==0:
+                        self.__E_mul[i]=Z
+                        self.__H_mul[i]=Z_1
                     else:
-                        self.__H_mul[i]=Z_1/self.__geometries[prior[-1]].inf[-1]
-                        self.__E_mul[i]=Z/self.__geometries[prior[-1]].inf[1]
-                    
-                        
-                    
-            
-        elif self.__dim==2:
-            __sqrt_1_2=1/(2**.5)
-            
-            Z=376.730313668*__sqrt_1_2
-            Z_1=__sqrt_1_2/376.730313668
-            
-            self.__E=np.zeros(self.__grid_size)
-            self.__H=np.zeros((2,)+self.__grid_size)
-            self.__H_mul=np.empty(self.__grid_size)
-            self.__E_mul=np.empty(self.__grid_size)
-            
-            
-            for i in range(self.__grid_size[0]):
-                for j in range(self.__grid_size[1]):
+                        for celestial in self.__celestials:
+                            c=celestial.export
+                            
+                            
+                            if c[1][0]==i:
+                                self.__E_mul[i]=Z/1e260
+                                self.__H_mul[i]=Z_1/1e260
+                            else:
+                                __=1+G*c[2]/abs(c[1][0]-i)/c_2/self.__ds
+                                self.__E_mul[i]=Z/__
+                                self.__H_mul[i]=Z_1/__
+                            
+            elif self.__dim==2:
+                __sqrt_1_2=1/(2**.5)
+                
+                Z=376.730313668*__sqrt_1_2
+                Z_1=__sqrt_1_2/376.730313668
+                
+                self.__E=np.zeros(self.__grid_size)
+                self.__H=np.zeros((2,)+self.__grid_size)
+                self.__H_mul=np.empty(self.__grid_size)
+                self.__E_mul=np.empty(self.__grid_size)
+                
+                l_c=len(self.__celestials)
+                
+                for i in range(self.__grid_size[0]):
+                    for j in range(self.__grid_size[1]):
+                        if l_c==0:
+                            self.__E_mul[i][j]=Z
+                            self.__H_mul[i][j]=Z_1
+                        else:
+                            for celestial in self.__celestials:
+                                c=celestial.export
+                                
+                                if c[1][0]==i and c[1][0]==i:
+                                    self.__E_mul[i][j]=Z/1e260
+                                    self.__H_mul[i][j]=Z_1/1e260
+                                else:
+                                    r=( (c[1][0]-i)**2 + (c[1][1]-j)**2 )**.5
+                                    __=1+G*c[2]/r/c_2/self.__ds
+                                    self.__E_mul[i][j]=Z/__
+                                    self.__H_mul[i][j]=Z_1/__
+
+        else: 
+            if self.__dim==1:
+                
+                Z=376.730313668
+                Z_1=1/Z
+                
+                
+                self.__E=np.zeros(self.__grid_size)
+                self.__H=np.zeros(self.__grid_size)
+                
+                self.__H_mul=np.empty(self.__grid_size)
+                self.__E_mul=np.empty(self.__grid_size)
+                
+                
+                for i in range(self.__grid_size[0]):
                     prior=1000,-1
                     for o in range(self.__n_of_objects):
-                        if self.__geometries[o].isIn((i,j)) and self.__geometries[o].inf[0]<prior[0]:
+                        if self.__geometries[o].isIn(i) and self.__geometries[o].inf[0]<prior[0]:
                             prior=self.__geometries[o].inf[0],o
                             
-                    if prior[-1]==-1:
-                        self.__H_mul[i][j]=Z_1
-                        self.__E_mul[i][j]=Z
-
-                    else:
-                        self.__H_mul[i][j]=Z_1/self.__geometries[prior[-1]].inf[-1]
-                        self.__E_mul[i][j]=Z/self.__geometries[prior[-1]].inf[1]
-                            
-            plt.imshow(self.__E_mul)
-
-
-        elif self.__dim==3:
-            __sqrt_1_3=1/(3)**.5
-            Z=376.730313668*__sqrt_1_3
-            Z_1=__sqrt_1_3/376.730313668
-            
-            self.__E=np.zeros((3,)+self.__grid_size)
-            self.__H=np.zeros((3,)+self.__grid_size)
-            self.__H_mul=np.empty(self.__grid_size)
-            self.__E_mul=np.empty(self.__grid_size)
-            
-            
-            for i in range(self.__grid_size[0]):
-                for j in range(self.__grid_size[1]):
-                    for k in range(self.__grid_size[2]):
-                        prior=1000,-1
-                        for o in range(self.__n_of_objects):
-                            if self.__geometries[o].isIn((i,j,k)) and self.__geometries[o].inf[0]<prior[0]:
-                                prior=self.__geometries[o].inf[0],o
                         if prior[-1]==-1:
-                            self.__H_mul[i][j][k]=Z_1
-                            self.__E_mul[i][j][k]=Z
+                            self.__H_mul[i]=Z_1
+                            self.__E_mul[i]=Z
     
                         else:
-                            self.__H_mul[i][j][k]=Z_1/self.__geometries[prior[-1]].inf[-1]
-                            self.__E_mul[i][j][k]=Z/self.__geometries[prior[-1]].inf[1]
+                            self.__H_mul[i]=Z_1/self.__geometries[prior[-1]].inf[-1]
+                            self.__E_mul[i]=Z/self.__geometries[prior[-1]].inf[1]
+                        
                             
-        else:
-            raise NotImplementedError("Field Arrays couldn't be initialized")
+            elif self.__dim==2:
+                __sqrt_1_2=1/(2**.5)
+                
+                Z=376.730313668*__sqrt_1_2
+                Z_1=__sqrt_1_2/376.730313668
+                
+                self.__E=np.zeros(self.__grid_size)
+                self.__H=np.zeros((2,)+self.__grid_size)
+                self.__H_mul=np.empty(self.__grid_size)
+                self.__E_mul=np.empty(self.__grid_size)
+                
+                
+                for i in range(self.__grid_size[0]):
+                    for j in range(self.__grid_size[1]):
+                        prior=1000,-1
+                        for o in range(self.__n_of_objects):
+                            if self.__geometries[o].isIn((i,j)) and self.__geometries[o].inf[0]<prior[0]:
+                                prior=self.__geometries[o].inf[0],o
+                                
+                        if prior[-1]==-1:
+                            self.__H_mul[i][j]=Z_1
+                            self.__E_mul[i][j]=Z
+    
+                        else:
+                            self.__H_mul[i][j]=Z_1/self.__geometries[prior[-1]].inf[-1]
+                            self.__E_mul[i][j]=Z/self.__geometries[prior[-1]].inf[1]
+                                
+                plt.imshow(self.__E_mul)
+    
+    
+            elif self.__dim==3:
+                __sqrt_1_3=1/(3)**.5
+                Z=376.730313668*__sqrt_1_3
+                Z_1=__sqrt_1_3/376.730313668
+                
+                self.__E=np.zeros((3,)+self.__grid_size)
+                self.__H=np.zeros((3,)+self.__grid_size)
+                self.__H_mul=np.empty(self.__grid_size)
+                self.__E_mul=np.empty(self.__grid_size)
+                
+                
+                for i in range(self.__grid_size[0]):
+                    for j in range(self.__grid_size[1]):
+                        for k in range(self.__grid_size[2]):
+                            prior=1000,-1
+                            for o in range(self.__n_of_objects):
+                                if self.__geometries[o].isIn((i,j,k)) and self.__geometries[o].inf[0]<prior[0]:
+                                    prior=self.__geometries[o].inf[0],o
+                            if prior[-1]==-1:
+                                self.__H_mul[i][j][k]=Z_1
+                                self.__E_mul[i][j][k]=Z
+        
+                            else:
+                                self.__H_mul[i][j][k]=Z_1/self.__geometries[prior[-1]].inf[-1]
+                                self.__E_mul[i][j][k]=Z/self.__geometries[prior[-1]].inf[1]
+                                
+            else:
+                raise NotImplementedError("Field Arrays couldn't be initialized")
         
             
     def view_structure(self,bypass=True, *kwargs):
@@ -205,7 +289,6 @@ class Continuum(object):
             
             
     def view_field(self, *kwargs):
-        print(kwargs)
         if self.__dim==1:
             plt.clf()
             plt.plot(self.__E)     
@@ -249,8 +332,6 @@ def Render(field, n_time_steps):
         
     params=field.export_for_renderer()
     cc=cpu_count()
-    
-    
 
     E=params[2]
     H=params[3]
@@ -316,7 +397,9 @@ def Render(field, n_time_steps):
         plt.plot(E[2,10,:,0])
         field.load_from_renderer(E, H)
 
+                    
         
+
 class DotSource(object):
     def __init__(self, location, presence ,amplitude, frequency, phase=0):
         self.__location=location
