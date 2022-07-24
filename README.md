@@ -3,10 +3,10 @@
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
 
 
-
-![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/1.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/2.png)
-### ![Waveguide Example](examples/example.py):
+### ![Waveguide Example](examples/1-Dielectric-Wave-Guide.py):
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
+### ![Strong Gravitational Potential](examples/2-Near-Massive-Object.py)
+![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/5.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/6.png)
 
 
 ### How to Use
