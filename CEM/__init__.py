@@ -164,7 +164,7 @@ class Continuum(object):
                             for celestial in self.__celestials:
                                 c=celestial.export
                                 
-                                if c[1][0]==i and c[1][0]==i:
+                                if c[1][0]==i and c[1][1]==j:
                                     self.__E_mul[i][j]=Z/1e260
                                     self.__H_mul[i][j]=Z_1/1e260
                                 else:
@@ -172,6 +172,39 @@ class Continuum(object):
                                     __=1+G*c[2]/r/c_2/self.__ds
                                     self.__E_mul[i][j]=Z/__
                                     self.__H_mul[i][j]=Z_1/__
+                                    
+                                    
+            elif self.__dim==3:
+                __sqrt_1_3=1/(3)**.5
+                Z=376.730313668*__sqrt_1_3
+                Z_1=__sqrt_1_3/376.730313668
+                
+                self.__E=np.zeros((3,)+self.__grid_size)
+                self.__H=np.zeros((3,)+self.__grid_size)
+                self.__H_mul=np.empty(self.__grid_size)
+                self.__E_mul=np.empty(self.__grid_size)
+                
+                l_c=len(self.__celestials)
+                
+                for i in range(self.__grid_size[0]):
+                    for j in range(self.__grid_size[1]):
+                        for k in range(self.__grid_size[2]):
+                            if l_c==0:
+                                self.__E_mul[i][j][k]=Z
+                                self.__H_mul[i][j][k]=Z_1
+                            else:
+                                for celestial in self.__celestials:
+                                    c=celestial.export
+                                    
+                                    if c[1][0]==i and c[1][1]==j and  c[1][2]==k:
+                                        self.__E_mul[i][j][k]=Z/1e260
+                                        self.__H_mul[i][j][k]=Z_1/1e260
+                                    else:
+                                        r=( (c[1][0]-i)**2 + (c[1][1]-j)**2 + (c[1][2]-k)**2 )**.5
+                                        __=1+G*c[2]/r/c_2/self.__ds
+                                        self.__E_mul[i][j][k]=Z/__
+                                        self.__H_mul[i][j][k]=Z_1/__
+                            
 
         else: 
             if self.__dim==1:
@@ -419,3 +452,5 @@ class DotSource(object):
     @property
     def inf(self):
         return [0, self.__location, self.__presence, self.__amplitude, self.__frequency, self.__phase]
+        
+
