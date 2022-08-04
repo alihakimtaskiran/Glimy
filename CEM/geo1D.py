@@ -18,11 +18,11 @@ class Line(object):
         if not isinstance(layer, int):
             raise TypeError("Layer must be an int")
         
-        if not isinstance(e, (int, float, complex)):
-            raise TypeError("e(permittivity) must be a complex, float or int")
+        if not isinstance(e, (int, float)):
+            raise TypeError("e(permittivity) must be a float or int")
         
-        if not isinstance(mu, (int, float, complex)):
-            raise TypeError("mu(permiablity) must be a complex, float or int")
+        if not isinstance(mu, (int, float)):
+            raise TypeError("mu(permiablity) must be a float or int")
         
         self.__A=A
         self.__B=B
@@ -48,4 +48,3 @@ class Line(object):
         else:
             return False
     
-        
