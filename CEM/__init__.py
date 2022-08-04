@@ -389,9 +389,9 @@ def Render(field, n_time_steps):
     elif params[0]==2:
         for t in range(n_time_steps):
             for x in range(params[1][0]-1):
-                for y in range(params[1][1]-1):
-                    H[0][x][y]-=(E[x][y+1]-E[x][y])*H_mul[x][y]
-                    H[1][x][y]+=(E[x+1][y]-E[x][y])*H_mul[x][y]
+                    H[0][x][:-1]-=(E[x][1:]-E[x][:-1])*H_mul[x][:-1]
+                    H[1][x][:-1]+=(E[x+1][:-1]-E[x][:-1])*H_mul[x][:-1]
+
             for x in range(params[1][0]):
                 for y in range(params[1][1]):
                     E[x][y]+=(H[1][x][y]-H[1][x-1][y]-H[0][x][y]+H[0][x][y-1])*E_mul[x][y]
