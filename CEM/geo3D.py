@@ -27,10 +27,11 @@ class RectPrism(object):
         if layer>1000:
             raise ValueError("# of layer must be <=1000")
 
-        if not isinstance(e, (int, float, complex)):
-            raise TypeError("Permittivity(e) must be an int, float or complex")
-        if not isinstance(mu, (int, float, complex)):
-            raise TypeError("Permeability(mu) must be an int, float or complex")
+        if not isinstance(e, (int, float)):
+            raise TypeError("e(permittivity) must be a float or int")
+        
+        if not isinstance(mu, (int, float)):
+            raise TypeError("mu(permiablity) must be a float or int")
 
         self.__A=A
         self.__B=B
@@ -145,11 +146,11 @@ class Cylinder(object):
         if layer>1000:
             raise ValueError("# of layer must be <=1000")
 
-        if not isinstance(e, (int, float, complex)):
-            raise TypeError("Permittivity(e) must be an int, float or complex")
+        if not isinstance(e, (int, float)):
+            raise TypeError("e(permittivity) must be a float or int")
         
-        if not isinstance(mu, (int, float, complex)):
-            raise TypeError("Permeability(mu) must be an int, float or complex")
+        if not isinstance(mu, (int, float)):
+            raise TypeError("mu(permiablity) must be a float or int")
 
         self.__C=C
         self.__r=r
