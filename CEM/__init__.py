@@ -100,12 +100,11 @@ class Continuum(object):
 
                 self.__energizers.append((__[:4]+[__[4]*PI_2*self.__dt,__[5]]))
             
-    def set_curve(self, curved):
+    def set_curve(self, curved=False):
         if type(curved)==bool:
             self.__curved=curved
         else:
             raise TypeError("Continuum can be curved or not")
-  
         
     def __pre_render(self):
         
@@ -373,8 +372,7 @@ def Render(field, n_time_steps):
         
 
         for t in range(n_time_steps):
-            for j in range(params[1][0]-1):
-                H[j]+=(E[j+1]-E[j])*H_mul[j]
+            H[:-1]+=(E[1:]-E[:-1])*H_mul[:-1]
             
             for j in range(params[1][0]):
                 E[j]+=(H[j]-H[j-1])*E_mul[j]
@@ -388,10 +386,14 @@ def Render(field, n_time_steps):
         
     elif params[0]==2:
         for t in range(n_time_steps):
+ 
             for x in range(params[1][0]-1):
                     H[0][x][:-1]-=(E[x][1:]-E[x][:-1])*H_mul[x][:-1]
                     H[1][x][:-1]+=(E[x+1][:-1]-E[x][:-1])*H_mul[x][:-1]
+            
 
+
+            
             for x in range(params[1][0]):
                 for y in range(params[1][1]):
                     E[x][y]+=(H[1][x][y]-H[1][x-1][y]-H[0][x][y]+H[0][x][y-1])*E_mul[x][y]
@@ -450,5 +452,3 @@ class DotSource(object):
     @property
     def inf(self):
         return [0, self.__location, self.__presence, self.__amplitude, self.__frequency, self.__phase]
-        
-
