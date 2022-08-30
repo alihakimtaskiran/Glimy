@@ -4,7 +4,7 @@
   Moreover, Glimmy-FDTD can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of **Mach-Einstein-Dicke**.
 <pre>
 pip install glimy
-<pre>
+</pre>
 ### ![Strong Gravitational Potential](examples/2-Near-Massive-Object.py)
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/5.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/6.png)
 
