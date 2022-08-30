@@ -2,16 +2,15 @@
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
   Moreover, Glimmy-FDTD can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of **Mach-Einstein-Dicke**.
-
+<pre>
+pip install glimy
+<pre>
 ### ![Strong Gravitational Potential](examples/2-Near-Massive-Object.py)
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/5.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/6.png)
 
 ### ![Waveguide Example](examples/1-Dielectric-Wave-Guide.py):
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
 
-
-### How to Use
-Just put the ![CEM](https://github.com/alihakimtaskiran/Glimy-FDTD/tree/main/CEM) folder under working directory. Since C++ renderer engine is under construction, you may delete them.
 
 
 ### Tree
