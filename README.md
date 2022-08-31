@@ -1,7 +1,8 @@
 # Glimy
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
-  Moreover, Glimmy-FDTD can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of **Mach-Einstein-Dicke**.
+  Moreover, Glimy can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of **Mach-Einstein-Dicke**.
+  Glimy can simulate photonic devices with varying refractive index through time.
 <pre>
 pip install glimy
 </pre>
@@ -46,12 +47,20 @@ pip install glimy
 | 
 |----geo1D(module)--------|
 |                         |----Line(object)----------------|
-|                                                          |---__init__(A, B, layer, e=1, mu=1)
-|                                                          |---__repr__()
-|                                                          |---inf()
-|                                                          |---t()
-|                                                          |---isIn(point)
-| 
+|                         |                                |---__init__(A, B, layer, e=1, mu=1)
+|                         |                                |---__repr__()
+|                         |                                |---inf()
+|                         |                                |---t()
+|                         |                                |---isIn(point)
+|                         |
+|                         |
+|                         |----VLine(object)----------------|
+|                                                           |---__init__(A, B, time, layer, e=1, mu=1)
+|                                                           |---__repr__()
+|                                                           |---inf()
+|                                                           |---t()
+|                                                           |---isIn(point)
+|                                                           |---loc()
 | 
 |                                                   
 |----geo2D(module)--------|
@@ -64,11 +73,20 @@ pip install glimy
 |                         |
 |                         |
 |                         |----Circle(object)---------------|
-|                                                           |---__init__(A,r,layer,e=1,mu=1)
-|                                                           |---__repr__()
-|                                                           |---inf()
-|                                                           |---t()
-|                                                           |---isIn(point)
+|                         |                                 |---__init__(A,r,layer,e=1,mu=1)
+|                         |                                 |---__repr__()
+|                         |                                 |---inf()
+|                         |                                 |---t()
+|                         |                                 |---isIn(point)
+|                         |
+|                         | 
+|                         |----VRectangle(object)----------------|
+|                                                                |---__init__(A, B, time, layer, e=1, mu=1)
+|                                                                |---__repr__()
+|                                                                |---inf()
+|                                                                |---t()
+|                                                                |---isIn(point)
+|                                                                |---loc()
 |
 |
 |
@@ -90,11 +108,20 @@ pip install glimy
                           |        
                           |
                           |----Cylinder(object)-------------|
-                                                            |---__init__(C,r,h,layer=0,e=1,mu=1)
-                                                            |---__repr__()
-                                                            |---inf()
-                                                            |---t()
-                                                            |---isIn(point)
+                          |                                 |---__init__(C,r,h,layer=0,e=1,mu=1)
+                          |                                 |---__repr__()
+                          |                                 |---inf()
+                          |                                 |---t()
+                          |                                 |---isIn(point)
+                          |
+                          |
+                          |----VRectPrism(object)----------------|
+                                                                 |---__init__(A, B, time, layer, e=1, mu=1)
+                                                                 |---__repr__()
+                                                                 |---inf()
+                                                                 |---t()
+                                                                 |---isIn(point)
+                                                                 |---loc()
   </pre>
   
   # Documentation
@@ -154,6 +181,15 @@ pip install glimy
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   
+  ## geo1D.VLine(A, B, time, layer, e=1, mu=1)
+  Creates a line in 1D at given time.
+  - **A**: One of endpoints of the Line. It may take an integer. All units are # of grid cells.
+  - **B**: One of endpoints of the Line. It may take an integer. All units are # of grid cells.
+  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like dielectric waveguides.
+  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **time** : The instance that after it refractive index of the area changes
+  
   ## geo2D.Rectangle(A, B, layer, e=1, mu=1)
   Creates a rectangle in 2D.
   - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
@@ -169,6 +205,15 @@ pip install glimy
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  
+    ## geo2D.VRectangle(A, B, time, layer, e=1, mu=1)
+  Creates a rectangle in 2D at given time.
+  - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
+  - **B**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
+  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
+  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **time** : The instance that after it refractive index of the area changes
   
   ## geo3D.RectPrism(A, B, layer, e=1, mu=1)
  Creates a rectangular prism in 3D.
@@ -194,4 +239,14 @@ pip install glimy
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  
+  ## geo3D.VRectPrism(A, B, time, layer, e=1, mu=1)
+ Creates a rectangular prism in 3D at given time.
+  - **A**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
+  - **B**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
+  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
+  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **time** : The instance that after it refractive index of the area changes
+  
   
