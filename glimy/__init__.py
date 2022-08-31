@@ -70,10 +70,10 @@ class Continuum(object):
                 if self.__dim==1 and not isinstance(arg, (geo1D.Line, geo1D.VLine)):
                     raise TypeError("In 1-D, only lines are allowed")
                 
-                elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle, geo2D.VRectangle, geo2D.VCircle)):
+                elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle, geo2D.VRectangle)):
                     raise TypeError("In 2-D, only defined geometries are allowed")
                 
-                elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere, geo3D.VRectPrism, geo3D.VCylinder, geo3D.VSphere)):
+                elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere, geo3D.VRectPrism)):
                     raise TypeError("In 3-D, only defined geometries are allowed")
                 
                 else:
@@ -378,7 +378,6 @@ def Render(field, n_time_steps):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
     params=field.export_for_renderer()
-
     
     __sqrt_1_dim=1/(params[0]**.5)
     Z=376.730313668*__sqrt_1_dim
@@ -415,6 +414,16 @@ def Render(field, n_time_steps):
         
     elif params[0]==2:
         for t in range(n_time_steps):
+            if t in params[8]:
+                for element in params[7][t]:
+                    cord=element.loc
+                    dat=element.inf
+                    print(cord[0][1])
+                    for i in range(cord[0][0],cord[1][0]):
+                        for j in range(cord[0][1],cord[1][1]):
+                            E_mul[i][j]=Z/dat[1]
+                            H_mul[i][j]=Z_1/dat[2]
+                            
  
             for x in range(params[1][0]-1):
                     H[0][x][:-1]-=(E[x][1:]-E[x][:-1])*H_mul[x][:-1]
@@ -432,7 +441,18 @@ def Render(field, n_time_steps):
         field.load_from_renderer(E, H)
         
     elif params[0]==3:
-        for t in range(n_time_steps): 
+        for t in range(n_time_steps):
+            if t in params[8]:
+                for element in params[7][t]:
+                    cord=element.loc
+                    dat=element.inf
+                    print(cord[0][1])
+                    for i in range(cord[0][0],cord[1][0]):
+                        for j in range(cord[0][1],cord[1][1]):
+                            for k in range(cord[0][2],cord[1][2]):
+                            E_mul[i][j][k]=Z/dat[1]
+                            H_mul[i][j][k]=Z_1/dat[2]
+            
         
             for x in range(params[1][0]-1):
                 for y in range(params[1][1]-1):

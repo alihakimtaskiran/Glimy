@@ -259,3 +259,7 @@ class VRectPrism(object):
     
     def __gt__(self, other):
         return self.__layer>other.__layer
+    
+    @property
+    def loc(self):
+        return self.__A, self.__B
