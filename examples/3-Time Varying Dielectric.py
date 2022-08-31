@@ -1,4 +1,4 @@
-import Glimy as glimy
+import glimy
 
 encoder=glimy.Continuum(2, (20,300), 5e-9)
 
