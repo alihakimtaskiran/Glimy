@@ -1,0 +1,32 @@
+import glimy
+#Test Done For 1D
+a1=glimy.geo1D.VLine(6,30, 20,12,5)
+a2=glimy.geo1D.VLine(6, 7, 8,)
+a3=glimy.geo1D.VLine(6, 9, 5,13)
+
+
+x=glimy.Continuum(1, (100,), 1e-2)
+x.add(glimy.geo1D.Line(0, 100,3,1))
+x.add((a1, a2,a3))
+x.add_energizer(glimy.DotSource((50,), (0,100), 1, 1.2e9))
+glimy.Render(x,50)
+x.view_field()
+#Test 2D
+a1=glimy.geo2D.VRectangle((40,40), (60,60), 10,1,3)
+x=glimy.Continuum(2, (100,100), 1e-2)
+x.add(a1)
+x.add_energizer(glimy.DotSource((50,50), (0,100), 1, 1.2e9))
+
+
+glimy.Render(x,50)
+x.view_field()
+
+#Test 3D
+a1=glimy.geo3D.VRectPrism((0,0,0), (5,5,1), 20, 3,7)
+x=glimy.Continuum(3, (50,50,20), 1e-2)
+x.add(a1)
+x.add_energizer(glimy.DotSource((0,0,0), (0,100), 1, 1.2e9))
+
+
+glimy.Render(x,30)
+x.view_field(2,0)
