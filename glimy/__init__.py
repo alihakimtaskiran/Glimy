@@ -450,8 +450,8 @@ def Render(field, n_time_steps):
                     for i in range(cord[0][0],cord[1][0]):
                         for j in range(cord[0][1],cord[1][1]):
                             for k in range(cord[0][2],cord[1][2]):
-                            E_mul[i][j][k]=Z/dat[1]
-                            H_mul[i][j][k]=Z_1/dat[2]
+                                E_mul[i][j][k]=Z/dat[1]
+                                H_mul[i][j][k]=Z_1/dat[2]
             
         
             for x in range(params[1][0]-1):
