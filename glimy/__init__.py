@@ -471,7 +471,7 @@ def Render(field, n_time_steps):
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[2][source[1]]+=source[3]*np.sin(source[4]*t+source[5])
         
-        field.load_from_renderer(E, H,)
+        field.load_from_renderer(E, H)
 
                     
         
