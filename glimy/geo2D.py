@@ -178,12 +178,16 @@ class VRectangle(object):
             else:
                 return False
         return True
-    
+
+    @property  
     def time(self):
         return self.__time
     
     def __ge__(self, other):
         return self.__layer>=other.__layer
+    
+    def __gt__(self, other):
+        return self.__layer>other.__layer
     
 
 class VCircle(object):
@@ -246,8 +250,12 @@ class VCircle(object):
         else:
             return False
         
+    @property  
     def time(self):
         return self.__time
     
     def __ge__(self, other):
         return self.__layer>=other.__layer
+    
+    def __gt__(self, other):
+        return self.__layer>other.__layer

@@ -102,9 +102,13 @@ class VLine(object):
             return True
         else:
             return False
-
+    
+    @property
     def time(self):
         return self.__time
     
     def __ge__(self, other):
         return self.__layer>=other.__layer
+    
+    def __gt__(self, other):
+        return self.__layer>other.__layer
