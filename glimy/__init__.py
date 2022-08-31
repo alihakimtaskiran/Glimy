@@ -418,7 +418,6 @@ def Render(field, n_time_steps):
                 for element in params[7][t]:
                     cord=element.loc
                     dat=element.inf
-                    print(cord[0][1])
                     for i in range(cord[0][0],cord[1][0]):
                         for j in range(cord[0][1],cord[1][1]):
                             E_mul[i][j]=Z/dat[1]
@@ -446,7 +445,6 @@ def Render(field, n_time_steps):
                 for element in params[7][t]:
                     cord=element.loc
                     dat=element.inf
-                    print(cord[0][1])
                     for i in range(cord[0][0],cord[1][0]):
                         for j in range(cord[0][1],cord[1][1]):
                             for k in range(cord[0][2],cord[1][2]):
@@ -473,7 +471,7 @@ def Render(field, n_time_steps):
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[2][source[1]]+=source[3]*np.sin(source[4]*t+source[5])
         
-        field.load_from_renderer(E, H)
+        field.load_from_renderer(E, H,)
 
                     
         
