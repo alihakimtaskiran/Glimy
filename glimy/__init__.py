@@ -1,10 +1,9 @@
 import numpy as np
-from math import sin,pi
-import glimy.geo1D
-import glimy.geo2D
-import glimy.geo3D
-import glimy.curved
-from multiprocessing import Pool, cpu_count
+from math import pi
+import Glimy.geo1D
+import Glimy.geo2D
+import Glimy.geo3D
+import Glimy.curved
 import matplotlib.pyplot as plt
 
 
@@ -46,6 +45,9 @@ class Continuum(object):
         self.__n_of_objects=0
         self.__curved=False
         self.__celestials=[]
+        self.__video=set()
+        self.__video_instructions={}
+        self.__video_frames=set()
 
         
     def add(self, arg):
@@ -65,22 +67,37 @@ class Continuum(object):
                       
             
             else:
-                if self.__dim==1 and not isinstance(arg, (geo1D.Line,)):
+                if self.__dim==1 and not isinstance(arg, (geo1D.Line, geo1D.VLine)):
                     raise TypeError("In 1-D, only lines are allowed")
                 
-                elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle)):
+                elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle, geo2D.VRectangle, geo2D.VCircle)):
                     raise TypeError("In 2-D, only defined geometries are allowed")
                 
-                elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere)):
+                elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere, geo3D.VRectPrism, geo3D.VCylinder, geo3D.VSphere)):
                     raise TypeError("In 3-D, only defined geometries are allowed")
                 
                 else:
-                    self.__geometries.append(arg)
-                    self.__n_of_objects+=1
-                
-       
-            
+                    if isinstance(arg,(geo1D.Line, geo2D.Rectangle, geo2D.Circle, geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere)):
+                        self.__geometries.append(arg)
+                        self.__n_of_objects+=1
+                    else:
+                        self.__video.add(arg)
+                        
+    def __prepare_video(self):
         
+        for element in self.__video:
+            self.__video_frames.add(element.time)
+
+        for i in self.__video_frames:
+            self.__video_instructions[i]=[]
+
+        for element in self.__video:
+            self.__video_instructions[element.time].append(element)
+            
+        for i in self.__video_frames:
+            self.__video_instructions[i].sort()
+            self.__video_instructions[i].reverse()
+
         
     def add_energizer(self, arg):
         if isinstance(arg, (set, tuple, list)):
@@ -343,7 +360,8 @@ class Continuum(object):
         
     def export_for_renderer(self):
         self.__pre_render()
-        return self.__dim, self.__grid_size, self.__E, self.__H, self.__E_mul, self.__H_mul, self.__energizers
+        self.__prepare_video()
+        return self.__dim, self.__grid_size, self.__E, self.__H, self.__E_mul, self.__H_mul, self.__energizers, self.__video_instructions, self.__video_frames
 
     def load_from_renderer(self, E, H):
         self.__E=E
@@ -360,7 +378,11 @@ def Render(field, n_time_steps):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
     params=field.export_for_renderer()
-    cc=cpu_count()
+
+    
+    __sqrt_1_dim=1/(params[0]**.5)
+    Z=376.730313668*__sqrt_1_dim
+    Z_1=__sqrt_1_dim/376.730313668
 
     E=params[2]
     H=params[3]
@@ -369,10 +391,17 @@ def Render(field, n_time_steps):
     
     if params[0]==1:
         
-        
-
         for t in range(n_time_steps):
-            H[:-1]+=(E[1:]-E[:-1])*H_mul[:-1]
+            if t in params[8]:
+                for element in params[7][t]:
+                    cord=element.loc
+                    dat=element.inf
+                    for i in range(cord[0],cord[1]):
+                        E_mul[i]=Z/dat[1]
+                        H_mul[i]=Z_1/dat[2]
+
+            for j in range(params[1][0]-1):
+                H[j]+=(E[j+1]-E[j])*H_mul[j]
             
             for j in range(params[1][0]):
                 E[j]+=(H[j]-H[j-1])*E_mul[j]
@@ -392,8 +421,6 @@ def Render(field, n_time_steps):
                     H[1][x][:-1]+=(E[x+1][:-1]-E[x][:-1])*H_mul[x][:-1]
             
 
-
-            
             for x in range(params[1][0]):
                 for y in range(params[1][1]):
                     E[x][y]+=(H[1][x][y]-H[1][x-1][y]-H[0][x][y]+H[0][x][y-1])*E_mul[x][y]

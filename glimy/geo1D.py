@@ -93,6 +93,9 @@ class VLine(object):
     def inf(self):
         return self.__layer, self.__e, self.__mu
     
+    @property
+    def loc(self):
+        return self.__A, self.__B
     
     def t(self):
         return 0
