@@ -310,27 +310,29 @@ class Continuum(object):
         
             
     def view_structure(self,bypass=True, *kwargs):
+        
+        mul=376.730313668/(self.__dim)**.5
 
         if not bypass:
             self.__pre_render()
         
         if self.__dim==1:
             plt.clf()
-            plt.plot(self.__E_mul)
+            plt.plot(1/self.__E_mul*mul)
             plt.show()
         elif self.__dim==2:
             plt.clf()
-            plt.imshow(self.__E_mul)
+            plt.imshow(1/self.__E_mul*mul)
             plt.show()
             
         elif self.__dim==3:
             plt.clf()
             if kwargs[0]==0:
-                plt.imshow(self.__E_mul[kwargs[1], :, :])   
+                plt.imshow(1/self.__E_mul[kwargs[1], :, :]*mul)   
             elif kwargs[0]==1:
-                plt.imshow(self.__E_mul[:, kwargs[1], :])
+                plt.imshow(1/self.__E_mul[:, kwargs[1], :]*mul)
             elif kwargs[0]==2:
-                plt.imshow(self.__E_mul[:, :, kwargs[1]])
+                plt.imshow(1/self.__E_mul[:, :, kwargs[1]]*mul)
             plt.show()
             
             
