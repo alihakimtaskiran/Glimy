@@ -1,9 +1,9 @@
 import numpy as np
 from math import pi
-import glimy.geo1D
-import glimy.geo2D
-import glimy.geo3D
-import glimy.curved
+import Glimy.geo1D
+import Glimy.geo2D
+import Glimy.geo3D
+import Glimy.curved
 import matplotlib.pyplot as plt
 
 
@@ -365,9 +365,11 @@ class Continuum(object):
         self.__prepare_video()
         return self.__dim, self.__grid_size, self.__E, self.__H, self.__E_mul, self.__H_mul, self.__energizers, self.__video_instructions, self.__video_frames
 
-    def load_from_renderer(self, E, H):
+    def load_from_renderer(self, E, H, E_mul, H_mul):
         self.__E=E
         self.__H=H
+        self.__E_mul=E_mul
+        self.__H_mul=H_mul
         
     def export_E_field(self):
         return self.__E
@@ -412,7 +414,7 @@ def Render(field, n_time_steps):
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
                     
-        field.load_from_renderer(E, H)
+        field.load_from_renderer(E, H, E_mul, H_mul)
         
     elif params[0]==2:
         for t in range(n_time_steps):
@@ -439,7 +441,7 @@ def Render(field, n_time_steps):
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
         
-        field.load_from_renderer(E, H)
+        field.load_from_renderer(E, H, E_mul, H_mul)
         
     elif params[0]==3:
         for t in range(n_time_steps):
