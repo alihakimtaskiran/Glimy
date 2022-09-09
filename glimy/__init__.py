@@ -1,9 +1,9 @@
 import numpy as np
 from math import pi
-import Glimy.geo1D
-import Glimy.geo2D
-import Glimy.geo3D
-import Glimy.curved
+import glimy.geo1D
+import glimy.geo2D
+import glimy.geo3D
+import glimy.curved
 import matplotlib.pyplot as plt
 
 
