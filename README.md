@@ -24,7 +24,7 @@ pip install glimy
 |                         |---view_structure(bypass=True,*kwargs)
 |                         |---view_field(*kwargs)
 |                         |---export_for_renderer()
-|                         |---load_from_renderer(E,H)
+|                         |---load_from_renderer(E,H, E_mul, H_mul)
 |                         |---export_E_field()
 |
 |
