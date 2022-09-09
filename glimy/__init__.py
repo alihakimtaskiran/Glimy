@@ -6,7 +6,6 @@ import glimy.geo3D
 import glimy.curved
 import matplotlib.pyplot as plt
 
-
 G=6.6743e-11
 c=299792458
 c_2=c**2
@@ -360,8 +359,9 @@ class Continuum(object):
             plt.show()
 
         
-    def export_for_renderer(self):
-        self.__pre_render()
+    def export_for_renderer(self, pre=False):
+        if pre:
+            self.__pre_render()
         self.__prepare_video()
         return self.__dim, self.__grid_size, self.__E, self.__H, self.__E_mul, self.__H_mul, self.__energizers, self.__video_instructions, self.__video_frames
 
@@ -374,14 +374,14 @@ class Continuum(object):
     def export_E_field(self):
         return self.__E
 
-def Render(field, n_time_steps):
+def Render(field, n_time_steps,pre=False):
     if not isinstance(field, Continuum):
         raise TypeError("Only Continuum is rendered")
         
     if not isinstance(n_time_steps, int):
         raise TypeError("# of time steps(n_time_steps) must be an int")
         
-    params=field.export_for_renderer()
+    params=field.export_for_renderer(pre)
     
     __sqrt_1_dim=1/(params[0]**.5)
     Z=376.730313668*__sqrt_1_dim
