@@ -29,7 +29,7 @@ pip install glimy
 |
 |
 |
-|---Render(field,n_time_steps)
+|---Render(field,n_time_steps,pre=False)
 |
 |
 |
@@ -155,10 +155,11 @@ pip install glimy
      
 <hr/> 
 
-  ## Render(field,n_time_steps)
+  ## Render(field,n_time_steps,pre=False)
    Executes FDTD calculations on a Continuum object.
    - **field** : It must take Continuum object. It s the field that evolved through time.
    - **n_time_steps** : It is number of time steps that field will evolve. It may take an integer. Lenght of time steps is given by ds/c/(<span>&#8730;</span>dim) ; where ds is grid spacing, c is speed of light and dim is number of dimensions of the grid. All units are SI.
+   - **pre** : It is a boolean. <code>False</code> : Rendering will refresh E-field and H-Field. <code>Ture</code> : Rendering will continue from last rendered state.
   
   ## DotSource(location,presence,amplitude,frequency,phase=0)
    Creates a point source on a given place on grid, through given time interval with given amplitude, frequency and phase.
