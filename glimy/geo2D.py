@@ -1,9 +1,11 @@
+from scipy.spatial import Delaunay
+from numpy import ndarray, array
 class Rectangle(object):
     def __init__(self, A,B,layer=0,e=1, mu=1):
         
-        if not isinstance(A, (tuple, list)):
+        if not isinstance(A, (tuple, list, ndarray)):
             raise TypeError("A must be a tuple or list")
-        if not isinstance(B, (tuple, list)):
+        if not isinstance(B, (tuple, list, ndarray)):
             raise TypeError("B must be a tuple or list")
         
         if len(A)!=2:
@@ -115,6 +117,53 @@ class Circle(object):
             return True
         else:
             return False
+
+class PointCloud(object):
+    def __init__(self, points, layer=0, e=1, mu=1):
+        
+        if not isinstance(points, (tuple, list, ndarray)):
+            raise TypeError("points must be a tuple, list or ndarray")
+
+        if not isinstance(layer, int):
+            raise TypeError("layer must be an int")
+            
+        if not isinstance(e, (tuple, list, int, float,ndarray)):
+            raise TypeError("e must be an int, float, tuple, list or ndarray")
+            
+        if not isinstance(mu, (tuple, list, int, float, ndarray)):
+            raise TypeError("mu must be an int, float, tuple, list or ndarray")
+        
+        if not len(points)>2:
+            raise ValueError("At least 3 points required to build 2D PointCloud")
+            
+        for point in points:
+            if len(point)!=2:
+                raise ValueError("points must include 2D coordinates of points")
+        
+        if not isinstance(layer, int):
+            raise TypeError("Layer must be an int")
+        
+        if not isinstance(e, (int, float)):
+            raise TypeError("e(permittivity) must be a float or int")
+        
+        if not isinstance(mu, (int, float)):
+            raise TypeError("mu(permiablity) must be a float or int")
+        
+        self.__hull=Delaunay(points)
+        self.__layer=layer
+        self.__e=e
+        self.__mu=mu
+
+    @property
+    def inf(self):
+        return self.__layer, self.__e, self.__mu
+        
+    def t(self):
+        return 3
+    
+    def isIn(self, point):
+        return self.__hull.find_simplex(point)>=0
+
 
 class VRectangle(object):
     def __init__(self, A,B,time, layer=0,e=1, mu=1):
