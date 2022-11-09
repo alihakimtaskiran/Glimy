@@ -1,10 +1,53 @@
+import os
 import numpy as np
 from math import pi
-import glimy.geo1D
-import glimy.geo2D
-import glimy.geo3D
-import glimy.curved
+from sys import platform
+import time
+
+import Glimy.geo1D
+import Glimy.geo2D
+import Glimy.geo3D
+import Glimy.curved
+
 import matplotlib.pyplot as plt
+
+G=6.6743e-11
+c=299792458
+c__2=c**2
+PI_2=pi*2
+
+class Continuum(object):
+
+    def __init__(self, dim, grid_size, ds):
+        if not isinstance(dim, int):
+            raise TypeError("# of dimensions must be an integer")
+        if not dim in {1,2,3}:
+            raise ValueError("# of dimensions must be 1, 2 or 3")
+        
+
+        if not isinstance(grid_size,(tuple,list)):
+            raise TypeError("# of pixels of grid must be carried by a tuple or a list")
+        if len(grid_size)!=dim:
+            raise ValueError("# of elements in grid must be the same as # of dimensions")
+            
+        if not isinstance(ds, (int,float)):
+            raise TypeError("ds(Δs) must be a float or int")
+        
+        self.__dim=dim
+        self.__grid_size=grid_size
+        self.__geometries=[]
+        self.__ds=ds
+        self.__dt=ds/c/(dim**.5)
+        self.__energizers=[]
+        self.__n_of_objects=0
+        self.__curved=False
+        self.__celestials=[]
+        self.__video=set()
+        self.__video_instructions={}
+        self.__video_frames=set()
+
+
+
 
 G=6.6743e-11
 c=299792458
@@ -69,14 +112,14 @@ class Continuum(object):
                 if self.__dim==1 and not isinstance(arg, (geo1D.Line, geo1D.VLine)):
                     raise TypeError("In 1-D, only lines are allowed")
                 
-                elif self.__dim==2 and not isinstance(arg, (geo2D.Rectangle, geo2D.Circle, geo2D.VRectangle)):
+                elif self.__dim==2 and not isinstance(arg, (geo2D.PointCloud,geo2D.Rectangle, geo2D.Circle, geo2D.VRectangle)):
                     raise TypeError("In 2-D, only defined geometries are allowed")
                 
-                elif self.__dim==3 and not isinstance(arg, (geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere, geo3D.VRectPrism)):
+                elif self.__dim==3 and not isinstance(arg, (geo3D.PointCloud, geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere, geo3D.VRectPrism)):
                     raise TypeError("In 3-D, only defined geometries are allowed")
                 
                 else:
-                    if isinstance(arg,(geo1D.Line, geo2D.Rectangle, geo2D.Circle, geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere)):
+                    if isinstance(arg,(geo1D.Line, geo2D.PointCloud, geo2D.Rectangle, geo2D.Circle, geo3D.PointCloud, geo3D.RectPrism, geo3D.Cylinder, geo3D.Sphere)):
                         self.__geometries.append(arg)
                         self.__n_of_objects+=1
                     else:
@@ -475,10 +518,10 @@ def Render(field, n_time_steps,pre=False):
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[2][source[1]]+=source[3]*np.sin(source[4]*t+source[5])
         
-        field.load_from_renderer(E, H)
+        field.load_from_renderer(E, H, E_mul, H_mul)
 
-                    
-        
+def CppRender(field, n_time_steps,pre=False):               
+        pass
 
 class DotSource(object):
     def __init__(self, location, presence ,amplitude, frequency, phase=0):
