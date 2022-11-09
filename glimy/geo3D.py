@@ -1,11 +1,60 @@
-from numpy import array
+from numpy import array, ndarray
+from scipy.spatial import Delaunay
+
+class PointCloud(object):
+    def __init__(self, points, layer=0, e=1, mu=1):
+        
+        if not isinstance(points, (tuple, list, ndarray)):
+            raise TypeError("points must be a tuple, list or ndarray")
+
+        if not isinstance(layer, int):
+            raise TypeError("layer must be an int")
+            
+        if not isinstance(e, (tuple, list, int, float,ndarray)):
+            raise TypeError("e must be an int, float, tuple, list or ndarray")
+            
+        if not isinstance(mu, (tuple, list, int, float, ndarray)):
+            raise TypeError("mu must be an int, float, tuple, list or ndarray")
+        
+        if not len(points)>3:
+            raise ValueError("At least 4 points required to build 3D PointCloud")
+            
+        for point in points:
+            if len(point)!=3:
+                raise ValueError("points must include 3D coordinates of points")
+        
+        if not isinstance(layer, int):
+            raise TypeError("Layer must be an int")
+        
+        if not isinstance(e, (int, float)):
+            raise TypeError("e(permittivity) must be a float or int")
+        
+        if not isinstance(mu, (int, float)):
+            raise TypeError("mu(permiablity) must be a float or int")
+        
+        self.__hull=Delaunay(points)
+        self.__layer=layer
+        self.__e=e
+        self.__mu=mu
+
+    @property
+    def inf(self):
+        return self.__layer, self.__e, self.__mu
+        
+    def t(self):
+        return 3
+    
+    def isIn(self, point):
+        return self.__hull.find_simplex(point)>=0
+
+
 class RectPrism(object):
     def __init__(self, A, B, layer=0, e=1, mu=1):
-        if not isinstance(A, (tuple, list, array)):
-            raise TypeError("A must be a tuple, list or array")
+        if not isinstance(A, (tuple, list, ndarray)):
+            raise TypeError("A must be a tuple, list or ndarray")
 
-        if not isinstance(B, (tuple, list, array)):
-            raise TypeError("B must be a tuple, list or array")
+        if not isinstance(B, (tuple, list, ndarray)):
+            raise TypeError("B must be a tuple, list or ndarray")
 
         if len(A)!=3:
             raise ValueError('A is defined in 3D')
@@ -65,7 +114,7 @@ class RectPrism(object):
 
 class Sphere(object):
     def __init__(self, C, r, layer=0, e=1, mu=1):
-        if not isinstance(C, (tuple, list, array)):
+        if not isinstance(C, (tuple, list, ndarray)):
             raise TypeError("C(center) must be a tuple, list or array")
         
         if len(C)!=3:
@@ -120,7 +169,7 @@ class Sphere(object):
 class Cylinder(object):
     def __init__(self, C, r, h, layer=0, e=1, mu=1):
 
-        if not isinstance(C, (tuple, list, array)):
+        if not isinstance(C, (tuple, list,ndarray)):
             raise TypeError("C(center) must be a tuple, list or array")
         
         if len(C)!=3:
