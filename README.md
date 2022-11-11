@@ -1,4 +1,6 @@
 # Glimy
+<img src="src/logo.png" width="200"></img>
+
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
   Moreover, Glimy can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of **Mach-Einstein-Dicke**.
