@@ -1,5 +1,5 @@
 # Glimy
-<img src="src/logo.png" width="200"></img>
+<img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/logo.png" width="200"></img>
 
 ## FDTD Simulator
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
