@@ -11,43 +11,6 @@ import glimy.curved
 
 import matplotlib.pyplot as plt
 
-G=6.6743e-11
-c=299792458
-c__2=c**2
-PI_2=pi*2
-
-class Continuum(object):
-
-    def __init__(self, dim, grid_size, ds):
-        if not isinstance(dim, int):
-            raise TypeError("# of dimensions must be an integer")
-        if not dim in {1,2,3}:
-            raise ValueError("# of dimensions must be 1, 2 or 3")
-        
-
-        if not isinstance(grid_size,(tuple,list)):
-            raise TypeError("# of pixels of grid must be carried by a tuple or a list")
-        if len(grid_size)!=dim:
-            raise ValueError("# of elements in grid must be the same as # of dimensions")
-            
-        if not isinstance(ds, (int,float)):
-            raise TypeError("ds(Δs) must be a float or int")
-        
-        self.__dim=dim
-        self.__grid_size=grid_size
-        self.__geometries=[]
-        self.__ds=ds
-        self.__dt=ds/c/(dim**.5)
-        self.__energizers=[]
-        self.__n_of_objects=0
-        self.__curved=False
-        self.__celestials=[]
-        self.__video=set()
-        self.__video_instructions={}
-        self.__video_frames=set()
-
-
-
 
 G=6.6743e-11
 c=299792458
