@@ -66,6 +66,13 @@ pip install glimy
 | 
 |                                                   
 |----geo2D(module)--------|
+|                         |----PointCloud(object)-----------|
+|                         |                                 |---__init__(points, layer=0, e=1, mu=1)
+|                         |                                 |---inf()
+|                         |                                 |---t()
+|                         |                                 |---isIn(point)
+|                         |
+|                         |
 |                         |----Rectangle(object)------------|
 |                         |                                 |---__init__(A,B,layer,e=1,mu=1)
 |                         |                                 |---__repr__()
@@ -93,6 +100,13 @@ pip install glimy
 |
 |
 |----geo3D(module)--------|
+                          |----PointCloud(object)-----------|
+                          |                                 |---__init__(points, layer=0, e=1, mu=1)
+                          |                                 |---inf()
+                          |                                 |---t()
+                          |                                 |---isIn(point)
+                          |
+                          |
                           |----RectPrism(object)------------|
                           |                                 |---__init__(A,B,layer=0,e=1,mu=1)
                           |                                 |---__repr__()
@@ -193,6 +207,14 @@ pip install glimy
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   - **time** : The instance that after it refractive index of the area changes
   
+  ## geo2D.PointCloud(points, layer=0, e=1, mu=1)
+  Creates a point cloud object in 2D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. hexagon,star, hearth) with it. 
+  - **points** : Points that defines convex full. It is a list, tuple or array of 2D points. Coordinates indicates # of cell in the grid. Like [(1,2), (2,3), (3,4)]. I needs at least 3 points. 
+  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
+  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  
+  
   ## geo2D.Rectangle(A, B, layer, e=1, mu=1)
   Creates a rectangle in 2D.
   - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
@@ -217,6 +239,13 @@ pip install glimy
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   - **time** : The instance that after it refractive index of the area changes
+  
+    ## geo3D.PointCloud(points, layer=0, e=1, mu=1)
+  Creates a point cloud object in 3D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. pyramid,star, hearth) with it. 
+  - **points** : Points that defines convex full. It is a list, tuple or array of 3D points. Coordinates indicates # of cell in the grid. Like [(1,2,0), (0,2,3), (0,3,4)]. I needs at least 3 points. 
+  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
+  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   
   ## geo3D.RectPrism(A, B, layer, e=1, mu=1)
  Creates a rectangular prism in 3D.
