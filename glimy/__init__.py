@@ -16,13 +16,7 @@ G=6.6743e-11
 c=299792458
 c_2=c**2
 PI_2=pi*2
-__E=None
-__H=None
 
-__E_mul=None
-__H_mul=None
-
-__nx, __ny, __nz=None, None, None
 
 class Continuum(object):
 
@@ -380,15 +374,39 @@ class Continuum(object):
     def export_E_field(self):
         return self.__E
 
-def Render(field, n_time_steps,pre=False):
+def Render(field, n_time_steps,obs="ALL", pre=False):
+ 
     if not isinstance(field, Continuum):
         raise TypeError("Only Continuum is rendered")
         
     if not isinstance(n_time_steps, int):
         raise TypeError("# of time steps(n_time_steps) must be an int")
-        
-    params=field.export_for_renderer(pre)
     
+    if not isinstance(obs, (str,set)):
+        raise TypeError("obs_mode must be a string or set")
+        
+
+    params=field.export_for_renderer(pre)
+    obs_point=False
+    obs_array=None
+    if type(obs)==set:
+        len_obs=len(obs)
+        obs_array=np.empty((len_obs,n_time_steps))
+        obs_point=True
+        for point in obs:
+            if len(point)!=params[0]:
+                raise ValueError("observer point must have same dimensions with the grid")
+            for d in range(params[0]):
+                if not isinstance(point[d], int):
+                    raise ValueError("location-tuple must include int's")
+                if not 0<=point[d]<params[1][d]:
+                    raise ValueError("Observer point must be in the grid")
+    else:
+        if not obs.upper()=="ALL":
+            raise ValueError("obs must be ALL or set of location-tuples")
+    obs=tuple(obs)
+    len_obs=len(obs)
+
     __sqrt_1_dim=1/(params[0]**.5)
     Z=376.730313668*__sqrt_1_dim
     Z_1=__sqrt_1_dim/376.730313668
@@ -415,6 +433,9 @@ def Render(field, n_time_steps,pre=False):
             for j in range(params[1][0]):
                 E[j]+=(H[j]-H[j-1])*E_mul[j]
             
+            if obs_point:
+                for i in range(len_obs):
+                    obs_array[i,t]=E[obs[i]]
             
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
@@ -442,7 +463,11 @@ def Render(field, n_time_steps,pre=False):
             for x in range(params[1][0]):
                 for y in range(params[1][1]):
                     E[x][y]+=(H[1][x][y]-H[1][x-1][y]-H[0][x][y]+H[0][x][y-1])*E_mul[x][y]
-                    
+            
+            if obs_point:
+                for i in range(len_obs):
+                    obs_array[i,t]=E[obs[i]]
+            
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[source[1]]+=source[3]*np.sin(source[4]*t+source[5])
@@ -476,12 +501,18 @@ def Render(field, n_time_steps,pre=False):
                         E[1][x][y][z]+=(H[0][x][y][z]-H[0][x][y][z-1]-H[2][x][y][z]-H[2][x-1][y][z])*E_mul[x][y][z]
                         E[2][x][y][z]+=(H[1][x][y][z]-H[1][x-1][y][z]-H[0][x][y][z]+H[0][x][y-1][z])*E_mul[x][y][z]
             
+            if obs_point:
+                for i in range(len_obs):
+                    obs_array[i,t]=E[(2,)+obs[i]]
             
             for source in params[6]:
                 if source[0]==0 and source[2][0]<=t<=source[2][1]:
                     E[2][source[1]]+=source[3]*np.sin(source[4]*t+source[5])
         
+
+
         field.load_from_renderer(E, H, E_mul, H_mul)
+    return obs_array
 
 def CppRender(field, n_time_steps,pre=False):               
         pass
@@ -506,3 +537,4 @@ class DotSource(object):
     @property
     def inf(self):
         return [0, self.__location, self.__presence, self.__amplitude, self.__frequency, self.__phase]
+
