@@ -31,7 +31,7 @@ pip install glimy
 |
 |
 |
-|---Render(field,n_time_steps,pre=False)
+|---Render(field,n_time_steps,obs="ALL",pre=False)
 |
 |
 |
@@ -175,6 +175,7 @@ pip install glimy
    Executes FDTD calculations on a Continuum object.
    - **field** : It must take Continuum object. It s the field that evolved through time.
    - **n_time_steps** : It is number of time steps that field will evolve. It may take an integer. Lenght of time steps is given by ds/c/(<span>&#8730;</span>dim) ; where ds is grid spacing, c is speed of light and dim is number of dimensions of the grid. All units are SI.
+   - **obs** : Determines whether time dependent logging will be the case. If it is set to <code>"ALL"</code>, time dependent observation is not the case. However, it is a set of points e.g <code>{ (0,0), (2,2) }</code> then it returns field amplitude of each given point. Returned array's order is the same as implicit order of the fed set.
    - **pre** : It is a boolean. <code>False</code> : Rendering will refresh E-field and H-Field. <code>True</code> : Rendering will continue from last rendered state.
   
   ## DotSource(location,presence,amplitude,frequency,phase=0)
