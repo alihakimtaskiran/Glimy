@@ -268,7 +268,8 @@ class Continuum(object):
     def export_grid(self):
         return self.__e, self.__mu
     
-    
+    def export_field(self):
+        return self.__E, self.__H
 
     def build(self,verbose=1):
         if verbose:
