@@ -19,125 +19,128 @@ pip install glimy
 ### Tree
 <pre>
 |----Continuum(object)----|
-|                         |---__init__(dim,grid_size,ds)
-|                         |---set_curve(curved)
+|                         |---__init__(grid_size,ds)
 |                         |---add(arg)
-|                         |---add_energizer(arg)
-|                         |---view_structure(bypass=True,*kwargs)
-|                         |---view_field(*kwargs)
-|                         |---export_for_renderer()
-|                         |---load_from_renderer(E,H, E_mul, H_mul)
-|                         |---export_E_field()
-|
-|
-|
-|---Render(field,n_time_steps,obs="ALL",pre=False)
-|
+|                         |---__categorizer()
+|                         |---__gravitonics()
+|                         |---gp(*x)
+|                         |---__emo_video_creator()
+|                         |---__grid_generator_at_t_0()
+|                         |---__update_grid()
+|                         |---export_grid()
+|                         |---build(verbose=1)
+|                         |---__prefix_quantifier(quantity)
+|                         |---__convert_to_time(time_in_secs)
+|                         |---__create_progress_bar_with_ETA(current_time,current_step,total_steps)
+|                         |---impose_grid(e,mu,anisotropy=(False,False))
+|                         |---view_metric(field="t",*args,colorbar=True)
+|                         |---view_structure(field="e",*args,colorbar=True)
+|                         |---view_field(field="E",*args,colorbar=True)
+|                         |---__numpy_renderer(*args)
+|                         |---pre_E()
+|                         |---pre_H()
+|                         |---pre_E()
+|                         |---pre_H()
+|                         |---Render(time_steps,backend="numpy",observers=None)
+|                         |---isbuilt()
+|                         |---isrendered()
+|                         |---__Z()
+|                         |---stellar()
+|                         |---ds()
+|                         |---dimensionality()
+|                         |---spec()
 |
 |
 |----DotSource(object)----|
 |                         |---__init__(location,presence,amplitude,frequency,phase=0)
 |                         |---__repr__()
 |                         |---inf()
-|                         
 |
-|----curved(module)-------|
-|                         |----SingularCelestial(object)---|
-|                                                          |---__init__(location, mass)
-|                                                          |---export
 |
 | 
-|----geo1D(module)--------|
-|                         |----Line(object)----------------|
-|                         |                                |---__init__(A, B, layer, e=1, mu=1)
-|                         |                                |---__repr__()
-|                         |                                |---inf()
-|                         |                                |---t()
-|                         |                                |---isIn(point)
-|                         |
-|                         |
-|                         |----VLine(object)----------------|
-|                                                           |---__init__(A, B, time, layer, e=1, mu=1)
-|                                                           |---__repr__()
-|                                                           |---inf()
-|                                                           |---t()
-|                                                           |---isIn(point)
-|                                                           |---loc()
-| 
-|                                                   
-|----geo2D(module)--------|
-|                         |----PointCloud(object)-----------|
-|                         |                                 |---__init__(points, layer=0, e=1, mu=1)
-|                         |                                 |---inf()
-|                         |                                 |---t()
-|                         |                                 |---isIn(point)
-|                         |
-|                         |
-|                         |----Rectangle(object)------------|
-|                         |                                 |---__init__(A,B,layer,e=1,mu=1)
-|                         |                                 |---__repr__()
-|                         |                                 |---inf()
-|                         |                                 |---t()
-|                         |                                 |---isIn(point)
-|                         |
-|                         |
-|                         |----Circle(object)---------------|
-|                         |                                 |---__init__(A,r,layer,e=1,mu=1)
-|                         |                                 |---__repr__()
-|                         |                                 |---inf()
-|                         |                                 |---t()
-|                         |                                 |---isIn(point)
-|                         |
-|                         | 
-|                         |----VRectangle(object)----------------|
-|                                                                |---__init__(A, B, time, layer, e=1, mu=1)
-|                                                                |---__repr__()
-|                                                                |---inf()
-|                                                                |---t()
-|                                                                |---isIn(point)
-|                                                                |---loc()
-|
-|
-|
-|----geo3D(module)--------|
-                          |----PointCloud(object)-----------|
-                          |                                 |---__init__(points, layer=0, e=1, mu=1)
-                          |                                 |---inf()
-                          |                                 |---t()
-                          |                                 |---isIn(point)
-                          |
-                          |
-                          |----RectPrism(object)------------|
-                          |                                 |---__init__(A,B,layer=0,e=1,mu=1)
-                          |                                 |---__repr__()
-                          |                                 |---inf()
-                          |                                 |---t()
-                          |                                 |---isIn(point)
-                          |
-                          |
-                          |----Sphere(object)---------------|
-                          |                                 |---__init__(C,r,layer=0,e=1,mu=1)
-                          |                                 |---__repr__()
-                          |                                 |---inf()
-                          |                                 |---t()
-                          |                                 |---isIn(point)
-                          |        
-                          |
-                          |----Cylinder(object)-------------|
-                          |                                 |---__init__(C,r,h,layer=0,e=1,mu=1)
-                          |                                 |---__repr__()
-                          |                                 |---inf()
-                          |                                 |---t()
-                          |                                 |---isIn(point)
-                          |
-                          |
-                          |----VRectPrism(object)----------------|
-                                                                 |---__init__(A, B, time, layer, e=1, mu=1)
-                                                                 |---__repr__()
-                                                                 |---inf()
-                                                                 |---t()
-                                                                 |---isIn(point)
-                                                                 |---loc()
+|----geo(module)--------|
+                        |----SingularCelestial(object)----|
+                        |                                 |---__init__(location,mass)
+                        |                                 |---export()
+                        |                                 |---dimensionality()
+                        |                                 |---__repr__()
+                        |
+                        |
+                        |----MassiveCluster(object)-------|
+                        |                                 |---__init__(objects,volatile=False)
+                        |                                 |---add(arg)
+                        |                                 |---content()
+                        |                                 |---dimensionality()
+                        |                                 |---__repr__()
+                        |
+                        |
+                        |----PointCloud(object)-----------|
+                        |                                 |---__init__(points,layer=0,e=1,mu=1,time=None)
+                        |                                 |---isIn(point)
+                        |                                 |---ExistInInstance(time_step)
+                        |                                 |---dimensionality()
+                        |                                 |---info()
+                        |                                 |---eternity()
+                        |                                 |---fielder()
+                        |                                 |---duration()
+                        |                                 |---coverage()
+                        |                                 |---anisotropy()
+                        |                                 |---layer()
+                        |                                 |---__repr__()
+                        |
+                        |
+                        |----Rectangle(PointCloud)--------|
+                        |                                 |---__init__(A,B,layer=0,e=1,mu=1,time=None)
+                        |
+                        |
+                        |----RectPrism(PointCloud)--------|
+                        |                                 |---__init__(A,B,layer=0,e=1,mu=1,time=None)
+                        |
+                        |
+                        |----Circle(object)---------------|
+                        |                                 |---__init__(A,r,layer=0,e=1,mu=1,time=None)
+                        |                                 |---isIn(point)
+                        |                                 |---ExistInInstance(time_step)
+                        |                                 |---dimensionality()
+                        |                                 |---info()
+                        |                                 |---eternity()
+                        |                                 |---fielder()
+                        |                                 |---duration()
+                        |                                 |---coverage()
+                        |                                 |---anisotropy()
+                        |                                 |---layer()
+                        |                                 |---__repr__()
+                        |
+                                                |
+                        |----Sphere(object)---------------|
+                        |                                 |---__init__(A,r,layer=0,e=1,mu=1,time=None)
+                        |                                 |---isIn(point)
+                        |                                 |---ExistInInstance(time_step)
+                        |                                 |---dimensionality()
+                        |                                 |---info()
+                        |                                 |---eternity()
+                        |                                 |---fielder()
+                        |                                 |---duration()
+                        |                                 |---coverage()
+                        |                                 |---anisotropy()
+                        |                                 |---layer()
+                        |                                 |---__repr__()
+                        |
+                        |
+                        |----Cylinder(object)-------------|
+                                                          |---__init__(A,r,h,layer=0,e=1,mu=1,time=None)
+                                                          |---isIn(point)
+                                                          |---ExistInInstance(time_step)
+                                                          |---dimensionality()
+                                                          |---info()
+                                                          |---eternity()
+                                                          |---fielder()
+                                                          |---duration()
+                                                          |---coverage()
+                                                          |---anisotropy()
+                                                          |---layer()
+                                                          |---__repr__()
+          
   </pre>
   
   # Documentation
