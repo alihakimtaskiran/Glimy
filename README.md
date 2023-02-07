@@ -15,6 +15,7 @@ pip install glimy
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
 
 ### ⚠️ Inconsistency between docs and source code is due to update right now. It will be updated soon ~2 hours
+## ⚠️ [Get consistent documentation here](https://pypi.org/project/glimy/)
 
 ### Tree
 <pre>
