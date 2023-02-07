@@ -14,9 +14,6 @@ pip install glimy
 ### ![Waveguide Example](examples/1-Dielectric-Wave-Guide.py):
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
 
-### ⚠️ Inconsistency between docs and source code is due to update right now. It will be updated soon ~2 hours
-## ⚠️ [Get consistent documentation here](https://pypi.org/project/glimy/)
-
 ### Tree
 <pre>
 |----Continuum(object)----|
@@ -190,7 +187,7 @@ view_metric(field="t",*args,colorbar=True)
   - **layer** : Priority of the object. It is an integer. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
-  - **time** : It determines
+  - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
   
   ## geo.Rectangle(A, B, layer, e=1, mu=1, time)
@@ -198,32 +195,36 @@ view_metric(field="t",*args,colorbar=True)
   - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
+  - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
   ## geo.Circle(A,r,layer,e=1,mu=1, time)
   Creates a circle in 2D.
   - **A** : Coordinates of center of the Circle. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the circle. It may take an integer. All units are # of grid cells.
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  
+   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
+  - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
+
   ## geo.RectPrism(A, B, layer, e=1, mu=1, time)
  Creates a rectangular prism in 3D.
   - **A**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
+  - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
   ## geo.Sphere(C,r,layer=0,e=1,mu=1)
   Creates a sphere in 3D.
   - **C** : Coordinates of center of the Sphere. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the sphere. It may take an integer. All units are # of grid cells.
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
+  - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
   ## geo.Cylinder(C,r,h,layer=0,e=1,mu=1, time)
  Creates a cylinder in 3D. Its planes are **parallel to xy-plane**
@@ -231,5 +232,6 @@ view_metric(field="t",*args,colorbar=True)
   - **r** : Radius of the Cylinder. It may take an integer. All units are # of grid cells.
   - **h** : Height of the Cylinder. It may take an integer. All units are # of grid cells.
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+  - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
+  - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations.
