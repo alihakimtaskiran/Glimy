@@ -161,16 +161,14 @@ view_metric(field="t",*args,colorbar=True)
   - **field** : It takes "t" for curvatures in time. No other grids are not compatible yet.
   - **\*args** : Only used in 3D. It used specify axis of view. Plane and and index number can be inserted. For example "z", 10 corresponds z=10 plane in the 3D array. "x","y","z" can be inserted. Also "yz", "xz", "xy" are synonym respectively.
   - **colorbar**: If is is set to **True**, colorbar is displayed.
-     
+### Render(time_steps,backend="numpy",observers=None)
+   Executes FDTD calculations on a Continuum object.
+   - **time_steps** : It is number of time steps that field will evolve. It may take an integer. Lenght of time steps is given by ds/c/(<span>&#8730;</span>dim) ; where ds is grid spacing, c is speed of light and dim is number of dimensions of the grid. All units are SI.
+   - **backend** : It sets the backend. Only **numpy** is supported recently. Therefore it is always **numpy**
+   - **observers** : Determines whether time dependent logging will be the case. If it is set to <code>None</code>, time dependent observation is not the case. However, it is a tuple or list of points e.g <code>[ (0,0), (2,2) ]</code> then it returns E-field amplitude of each given point. Returned array's order is the same as implicit order of the fed list/tuple.
 <hr/> 
 
-  ## Render(field,n_time_steps,pre=False)
-   Executes FDTD calculations on a Continuum object.
-   - **field** : It must take Continuum object. It s the field that evolved through time.
-   - **n_time_steps** : It is number of time steps that field will evolve. It may take an integer. Lenght of time steps is given by ds/c/(<span>&#8730;</span>dim) ; where ds is grid spacing, c is speed of light and dim is number of dimensions of the grid. All units are SI.
-   - **obs** : Determines whether time dependent logging will be the case. If it is set to <code>"ALL"</code>, time dependent observation is not the case. However, it is a set of points e.g <code>{ (0,0), (2,2) }</code> then it returns field amplitude of each given point. Returned array's order is the same as implicit order of the fed set.
-   - **pre** : It is a boolean. <code>False</code> : Rendering will refresh E-field and H-Field. <code>True</code> : Rendering will continue from last rendered state.
-  
+
   ## DotSource(location,presence,amplitude,frequency,phase=0)
    Creates a point source on a given place on grid, through given time interval with given amplitude, frequency and phase.
    - **location** : It is location of dot source. It may take a list or tuple. 
@@ -179,37 +177,23 @@ view_metric(field="t",*args,colorbar=True)
    - **frequency** : Frequency of the wave. It may take int or float.
    - **phase** : Phase of the wave. It may take int or float. It is default 0.
   
-  ## curved.SingularCelestial(location, mass):
+  ## geo.SingularCelestial(location, mass):
    Creates a point mass.
-   - **location** : Sets the location of point mass. Unit is unit length of the grid of th added Continuum It may take tuple, list or np.array. It must bu in form of N-tuple. It may be outside of the grid.
-   - **mass** : Stest the mass of the object. Unit is kg. It may take float ot int. 
-  
-  ## geo1D.Line(A, B, layer, e=1, mu=1)
-  Creates a line in 1D.
-  - **A**: One of endpoints of the Line. It may take an integer. All units are # of grid cells.
-  - **B**: One of endpoints of the Line. It may take an integer. All units are # of grid cells.
-  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  
-  ## geo1D.VLine(A, B, time, layer, e=1, mu=1)
-  Creates a line in 1D at given time.
-  - **A**: One of endpoints of the Line. It may take an integer. All units are # of grid cells.
-  - **B**: One of endpoints of the Line. It may take an integer. All units are # of grid cells.
-  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  - **time** : The instance that after it refractive index of the area changes
-  
-  ## geo2D.PointCloud(points, layer=0, e=1, mu=1)
-  Creates a point cloud object in 2D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. hexagon,star, hearth) with it. 
-  - **points** : Points that defines convex full. It is a list, tuple or array of 2D points. Coordinates indicates # of cell in the grid. Like [(1,2), (2,3), (3,4)]. I needs at least 3 points. 
-  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
+   - **location** : Sets the location of point mass. Unit is **meters**. It may take tuple, list or np.array. It must bu in form of N-tuple. It may be outside of the grid.
+   - **mass** : Stest the mass of the object. Unit is **kg**. It may take float ot int.
+  ## MassiveCluster(objects,volatile=False)
+  Creates cluster of massive objects. It is used to integrate
+ 
+  ## geo.PointCloud(points,layer=0,e=1,mu=1,time=None)
+  Creates a point cloud object in 2D or 3D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. hexagon,star, hearth) with it. 
+  - **points** : Points that defines convex full. It is a list, tuple or array of 2D or 3D points. Coordinates indicates # of cell in the grid. Like [(1,2), (2,3), (3,4)]. I needs at least 3 points in 2D, 4 points in 3D. 
+  - **layer** : Priority of the object. It is an integer. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
+  - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
+  - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
+  - **time** : It determines
   
   
-  ## geo2D.Rectangle(A, B, layer, e=1, mu=1)
+  ## geo.Rectangle(A, B, layer, e=1, mu=1, time)
   Creates a rectangle in 2D.
   - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
@@ -217,7 +201,7 @@ view_metric(field="t",*args,colorbar=True)
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   
-  ## geo2D.Circle(A,r,layer,e=1,mu=1)
+  ## geo.Circle(A,r,layer,e=1,mu=1, time)
   Creates a circle in 2D.
   - **A** : Coordinates of center of the Circle. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the circle. It may take an integer. All units are # of grid cells.
@@ -225,23 +209,7 @@ view_metric(field="t",*args,colorbar=True)
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   
-    ## geo2D.VRectangle(A, B, time, layer, e=1, mu=1)
-  Creates a rectangle in 2D at given time.
-  - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
-  - **B**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
-  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  - **time** : The instance that after it refractive index of the area changes
-  
-    ## geo3D.PointCloud(points, layer=0, e=1, mu=1)
-  Creates a point cloud object in 3D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. pyramid,star, hearth) with it. 
-  - **points** : Points that defines convex full. It is a list, tuple or array of 3D points. Coordinates indicates # of cell in the grid. Like [(1,2,0), (0,2,3), (0,3,4)]. I needs at least 3 points. 
-  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  
-  ## geo3D.RectPrism(A, B, layer, e=1, mu=1)
+  ## geo.RectPrism(A, B, layer, e=1, mu=1, time)
  Creates a rectangular prism in 3D.
   - **A**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
@@ -249,7 +217,7 @@ view_metric(field="t",*args,colorbar=True)
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   
-  ## geo3D.Sphere(C,r,layer=0,e=1,mu=1)
+  ## geo.Sphere(C,r,layer=0,e=1,mu=1)
   Creates a sphere in 3D.
   - **C** : Coordinates of center of the Sphere. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the sphere. It may take an integer. All units are # of grid cells.
@@ -257,7 +225,7 @@ view_metric(field="t",*args,colorbar=True)
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
   
-  ## geo3D.Cylinder(C,r,h,layer=0,e=1,mu=1)
+  ## geo.Cylinder(C,r,h,layer=0,e=1,mu=1, time)
  Creates a cylinder in 3D. Its planes are **parallel to xy-plane**
   - **C** : Coordinates of center of the Cylinder. It may take a tuple or list. All units are # of grid cells. Height signifies elongation though z axis.
   - **r** : Radius of the Cylinder. It may take an integer. All units are # of grid cells.
@@ -265,14 +233,3 @@ view_metric(field="t",*args,colorbar=True)
   - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
   - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  
-  ## geo3D.VRectPrism(A, B, time, layer, e=1, mu=1)
- Creates a rectangular prism in 3D at given time.
-  - **A**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
-  - **B**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
-  - **layer** : Priority of the object. It is an integer and maximum can take 1000. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
-  - **e** : Relative permittivity of the object. It may take float ot int. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
-  - **mu** : Relative permeability of the object. It may take float ot int. It is not restricted to be less than 1 intentionally.
-  - **time** : The instance that after it refractive index of the area changes
-  
-  
