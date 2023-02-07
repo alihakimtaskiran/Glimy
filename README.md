@@ -23,6 +23,7 @@ pip install glimy
 |                         |---__init__(grid_size,ds)
 |                         |---add(arg)
 |                         |---export_grid()
+|                         |---export_field()
 |                         |---build(verbose=1)
 |                         |---impose_grid(e,mu,anisotropy=(False,False))
 |                         |---view_metric(field="t",*args,colorbar=True)
