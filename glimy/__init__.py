@@ -1,7 +1,7 @@
 print("Interacting with reality...")
 import numpy as np
 import sys
-import Glimy.geo
+import glimy.geo
 
 import warnings
 import time
@@ -64,7 +64,7 @@ class Continuum(object):
             for element in arg:
                 self.add(element)
         else:
-            if isinstance(arg, (geo.SingularCelestial, geo.MassiveCluster, geo.PointCloud, geo.Rectangle, geo.RectPrism, geo.Circle, geo.Sphere, geo.Cylinder, DotSource, PolarizedSource)):
+            if isinstance(arg, (geo.SingularCelestial, geo.MassiveCluster, geo.PointCloud, geo.Rectangle, geo.RectPrism, geo.Circle, geo.Sphere, geo.Cylinder, DotSource)):
                 if arg.dimensionality!=self.__dim:
                     raise ValueError(f"# of dimensions of Continuum and added object must match:\n{arg}")
                 self.__objects.append(arg)
@@ -93,7 +93,7 @@ class Continuum(object):
                 for celestial in element.content:
                     self.__stellar.append(celestial.export[1:])
                     
-            elif __ in {DotSource, PolarizedSource}:
+            elif __ in {DotSource}:
                 element.set_dt(self.__dt)
                 self.__energizers.append(element)
 
