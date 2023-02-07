@@ -178,8 +178,13 @@ view_metric(field="t",*args,colorbar=True)
    Creates a point mass.
    - **location** : Sets the location of point mass. Unit is **meters**. It may take tuple, list or np.array. It must bu in form of N-tuple. It may be outside of the grid.
    - **mass** : Stest the mass of the object. Unit is **kg**. It may take float ot int.
-  ## MassiveCluster(objects,volatile=False)
-  Creates cluster of massive objects. It is used to integrate
+  ## geo.MassiveCluster(objects,volatile=False)
+  Creates cluster of massive objects. It is used to integrate so many heavy objects.
+   - **objects** : **geo.Singular** object or tuple/list/set of them
+   - **volatile** : If it is set <code>False</code>, any new object can't be added. If it is <code>True</code>, new objects can be added.
+  ### add(arg)
+  Adds a new **geo.Singular** object or tuple/list/set of them. If MassiveCluster is volatile, anything can't be added.
+  - **arg** : **geo.Singular** object or tuple/list/set of them.
  
   ## geo.PointCloud(points,layer=0,e=1,mu=1,time=None)
   Creates a point cloud object in 2D or 3D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. hexagon,star, hearth) with it. 
