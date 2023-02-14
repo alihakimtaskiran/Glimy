@@ -54,17 +54,6 @@ pip install glimy
                         |
                         |----PointCloud(object)-----------|
                         |                                 |---__init__(points,layer=0,e=1,mu=1,time=None)
-                        |                                 |---isIn(point)
-                        |                                 |---ExistInInstance(time_step)
-                        |                                 |---dimensionality()
-                        |                                 |---info()
-                        |                                 |---eternity()
-                        |                                 |---fielder()
-                        |                                 |---duration()
-                        |                                 |---coverage()
-                        |                                 |---anisotropy()
-                        |                                 |---layer()
-                        |                                 |---__repr__()
                         |
                         |
                         |----Rectangle(PointCloud)--------|
