@@ -77,47 +77,14 @@ pip install glimy
                         |
                         |----Circle(object)---------------|
                         |                                 |---__init__(A,r,layer=0,e=1,mu=1,time=None)
-                        |                                 |---isIn(point)
-                        |                                 |---ExistInInstance(time_step)
-                        |                                 |---dimensionality()
-                        |                                 |---info()
-                        |                                 |---eternity()
-                        |                                 |---fielder()
-                        |                                 |---duration()
-                        |                                 |---coverage()
-                        |                                 |---anisotropy()
-                        |                                 |---layer()
-                        |                                 |---__repr__()
                         |
                         |
                         |----Sphere(object)---------------|
                         |                                 |---__init__(A,r,layer=0,e=1,mu=1,time=None)
-                        |                                 |---isIn(point)
-                        |                                 |---ExistInInstance(time_step)
-                        |                                 |---dimensionality()
-                        |                                 |---info()
-                        |                                 |---eternity()
-                        |                                 |---fielder()
-                        |                                 |---duration()
-                        |                                 |---coverage()
-                        |                                 |---anisotropy()
-                        |                                 |---layer()
-                        |                                 |---__repr__()
                         |
                         |
                         |----Cylinder(object)-------------|
                                                           |---__init__(A,r,h,layer=0,e=1,mu=1,time=None)
-                                                          |---isIn(point)
-                                                          |---ExistInInstance(time_step)
-                                                          |---dimensionality()
-                                                          |---info()
-                                                          |---eternity()
-                                                          |---fielder()
-                                                          |---duration()
-                                                          |---coverage()
-                                                          |---anisotropy()
-                                                          |---layer()
-                                                          |---__repr__()
           
   </pre>
   
