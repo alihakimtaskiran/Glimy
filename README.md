@@ -23,7 +23,7 @@ pip install glimy
 |                         |---export_field()
 |                         |---build(verbose=1)
 |                         |---impose_grid(e,mu,anisotropy=(False,False))
-|                         |---view_metric(field="t",*args,colorbar=True)
+|                         |---view_(field="t",*args,colorbar=True)
 |                         |---view_structure(field="e",*args,colorbar=True)
 |                         |---view_field(field="E",*args,colorbar=True)
 |                         |---Render(time_steps,backend="numpy",observers=None)
@@ -109,7 +109,7 @@ pip install glimy
   - **field** : It takes "E" for electric field, "H" or magnetic field.
   - **\*args** : Only used in 3D. It used specify axis of view. Plane and and index number can be inserted. For example "z", 10 corresponds z=10 plane in the 3D array. "x","y","z" can be inserted. Also "yz", "xz", "xy" are synonym respectively.
   - **colorbar**: If is is set to **True**, colorbar is displayed.
-view_metric(field="t",*args,colorbar=True)
+### view_metric(field="t",*args,colorbar=True)
   You can view geometrodynamic curvature due to the massive objects in the grid.
   - **field** : It takes "t" for curvatures in time. No other grids are not compatible yet.
   - **\*args** : Only used in 3D. It used specify axis of view. Plane and and index number can be inserted. For example "z", 10 corresponds z=10 plane in the 3D array. "x","y","z" can be inserted. Also "yz", "xz", "xy" are synonym respectively.
