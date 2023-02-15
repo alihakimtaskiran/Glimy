@@ -151,7 +151,7 @@ pip install glimy
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
   
-  ## geo.Rectangle(A, B, layer, e=1, mu=1, time)
+  ## geo.Rectangle(A, B, layer, e=1, mu=1, time=None)
   Creates a rectangle in 2D.
   - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
@@ -160,7 +160,7 @@ pip install glimy
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
-  ## geo.Circle(A,r,layer,e=1,mu=1, time)
+  ## geo.Circle(A,r,layer,e=1,mu=1, time=None)
   Creates a circle in 2D.
   - **A** : Coordinates of center of the Circle. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the circle. It may take an integer. All units are # of grid cells.
@@ -169,7 +169,7 @@ pip install glimy
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
 
-  ## geo.RectPrism(A, B, layer, e=1, mu=1, time)
+  ## geo.RectPrism(A, B, layer, e=1, mu=1, time=None)
  Creates a rectangular prism in 3D.
   - **A**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
@@ -178,7 +178,7 @@ pip install glimy
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
-  ## geo.Sphere(C,r,layer=0,e=1,mu=1)
+  ## geo.Sphere(C,r,layer=0,e=1,mu=1, time=None)
   Creates a sphere in 3D.
   - **C** : Coordinates of center of the Sphere. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the sphere. It may take an integer. All units are # of grid cells.
@@ -187,7 +187,7 @@ pip install glimy
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
-  ## geo.Cylinder(C,r,h,layer=0,e=1,mu=1, time)
+  ## geo.Cylinder(C,r,h,layer=0,e=1,mu=1, time=None)
  Creates a cylinder in 3D. Its planes are **parallel to xy-plane**
   - **C** : Coordinates of center of the Cylinder. It may take a tuple or list. All units are # of grid cells. Height signifies elongation though z axis.
   - **r** : Radius of the Cylinder. It may take an integer. All units are # of grid cells.
