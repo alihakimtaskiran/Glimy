@@ -14,6 +14,13 @@ pip install glimy
 ### ![Waveguide Example](examples/1-Dielectric-Wave-Guide.py):
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/3.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/4.png)
 
+<hr/>
+
+### ![Anisotropic Medium](https://github.com/alihakimtaskiran/Glimy/blob/main/examples/5-%20Anisotropic%20Medium.py)
+
+<img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/7.png" width="400">    <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/8.png" width="600">
+
+<hr>
 ### Tree
 <pre>
 |----Continuum(object)----|
