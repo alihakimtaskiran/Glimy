@@ -8,6 +8,11 @@
 <pre>
 pip install glimy
 </pre>
+## Capabilities
+-  Electromagnetic waves in dielectric and magnetic materials.
+-  Gravitational effect on electromagnetism
+-  Anisotropic materials
+-  Objects can be insrted and omitted through the time
 ### ![Strong Gravitational Potential](examples/2-Near-Massive-Object.py)
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/5.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/6.png)
 
@@ -21,6 +26,7 @@ pip install glimy
 <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/7.png" width="400">    <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/8.png" width="600">
 
 <hr>
+
 ### Tree
 <pre>
 |----Continuum(object)----|
