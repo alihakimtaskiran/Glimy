@@ -12,6 +12,7 @@ c=299792458
 c_2=c**2
 PI_2=np.pi*2
 Z_0=376.730313
+e_0=8.8541878128e-12
 
 class Continuum(object):
     def __init__(self, grid_size, ds):
@@ -41,6 +42,7 @@ class Continuum(object):
         self.__built=False
         
         self.__anisotropy=False
+        self.__conductivity=False
         
         self.__Jdt=np.ones(self.__grid_size)
 
@@ -85,6 +87,9 @@ class Continuum(object):
                 self.__emo.append(element)
                 if element.anisotropy:
                     self.__anisotropy=True
+                
+                if element.conductivity:
+                    self.__conductivity=True
 
             elif __==geo.SingularCelestial:
                 self.__stellar.append(element.export[1:])
@@ -121,6 +126,8 @@ class Continuum(object):
             self.__e=np.ones(shape)
             self.__mu=np.ones(shape)
             
+        if self.__conductivity:
+            self.__sigma=np.zeros(self.__grid_size)
         
         
         
@@ -131,7 +138,8 @@ class Continuum(object):
                 for i in range(self.__dim):
                      e[i,i]=element.fielder[0]
                      mu[i,i]=element.fielder[1]
-                fielder=e,mu
+                
+                fielder=e,mu,element.fielder[2]
             else:
                 fielder=element.fielder
             mfs=[a[1]-a[0] for a in element.coverage]
@@ -146,6 +154,7 @@ class Continuum(object):
                 ind=index+sl
                 if element.isIn(ind):                    
                     modified_array[index]=ad
+            
 
             action=(element.layer, element.coverage, modified_array, fielder)
             
@@ -192,6 +201,11 @@ class Continuum(object):
                     self.__mu[indices]*=np.logical_not(action[2])
                     self.__mu[indices]+=np.full(mfs+[self.__dim, self.__dim],action[3][1])*action[2]
                     
+                    if self.__conductivity:
+                        
+                        self.__sigma[indices]*=np.logical_not(action[2][:,:,:,0,0])
+                        tg_a=np.full(mfs,action[3][2])*action[2][:,:,:,0,0]
+                        self.__sigma[indices]+=tg_a
 
                     
                 else:
@@ -202,6 +216,12 @@ class Continuum(object):
                     self.__mu[indices]*=np.logical_not(action[2])
                     tg_a=np.full(mfs,action[3][1])*action[2]
                     self.__mu[indices]+=tg_a
+                    
+                    if self.__conductivity:    
+                        self.__sigma[indices]*=np.logical_not(action[2])
+                        tg_a=np.full(mfs,action[3][2])*action[2]
+                        self.__sigma[indices]+=tg_a
+                    
         if self.__anisotropy:            
             self.__e_inv=np.linalg.inv(self.__e)
             self.__mu_inv=np.linalg.inv(self.__mu)
@@ -225,7 +245,11 @@ class Continuum(object):
                     
                     self.__mu[indices]*=np.logical_not(action[2])
                     self.__mu[indices]+=np.full(mfs+[self.__dim, self.__dim],action[3][1])*action[2]
-
+                    
+                    if self.__conductivity:
+                        self.__sigma[indices]*=np.logical_not(action[2][:,:,:,0,0])
+                        tg_a=np.full(mfs,action[3][2])*action[2][:,:,:,0,0]
+                        self.__sigma[indices]+=tg_a
                     
                 else:
                     
@@ -237,10 +261,16 @@ class Continuum(object):
                     tg_a=np.full(mfs,action[3][1])*action[2]
                     self.__mu[indices]+=tg_a
                     
+                    if self.__conductivity:    
+                        self.__sigma[indices]*=np.logical_not(action[2])
+                        tg_a=np.full(mfs,action[3][2])*action[2]
+                        self.__sigma[indices]+=tg_a
+                    
                     
         if self.__instance in self.__end_frames:
             change=True
             for action in self.__video_terminators[self.__instance]:
+                
                 mfs=[a[1]-a[0] for a in action[1]]
                 indices=tuple([slice(k[0], k[1]) for k in action[1]])
                 if self.__anisotropy:
@@ -249,6 +279,11 @@ class Continuum(object):
                     
                     self.__mu[indices]*=np.logical_not(action[2])
                     self.__mu[indices]+=np.full(mfs+[self.__dim, self.__dim],np.eye(self.__dim))*action[2]
+                    
+                    if self.__conductivity:   
+                        self.__sigma[indices]*=np.logical_not(action[2][:,:,:,0,0])
+                        tg_a=np.full(mfs,0)*action[2][:,:,:,0,0]
+                        self.__sigma[indices]+=tg_a 
 
                     
                 else:
@@ -260,6 +295,10 @@ class Continuum(object):
                     tg_a=np.full(mfs,1.)*action[2]
                     self.__mu[indices]+=tg_a
                     
+                    if self.__conductivity:
+                        self.__sigma[indices]*=np.logical_not(action[2])
+                        tg_a=np.full(mfs,0)*action[2]
+                        self.__sigma[indices]+=tg_a    
                 
         if change and self.__anisotropy:
             self.__e_inv=np.linalg.inv(self.__e)
@@ -284,7 +323,7 @@ class Continuum(object):
         self.__built_isotropic=self.__anisotropy
         self.__grid_generator_at_t_0()
         self.__instance=0
-        
+
         self.__E=np.zeros((3,)+self.__grid_size)
         self.__H=np.zeros((3,)+self.__grid_size)
         
@@ -446,6 +485,50 @@ class Continuum(object):
         elif field == "Z":
             array = self.__Z
             title="Z"
+        elif field == "sigma":
+            if not self.__conductivity:
+                raise NotImplementedError("The Continuum doesn't contain any conductive object")
+            else:
+                array=self.__sigma
+                title="$\sigma$"
+                axlabels={0:"x", 1:"y", 2:"z"} 
+                
+                if self.__dim == 1:
+                    plt.title(title)
+                    plt.plot(array)
+                    
+                elif self.__dim == 2:
+                    plt.title(title)
+                    plt.imshow(array.T)
+                    plt.xlabel("x")
+                    plt.ylabel("y")
+                    if colorbar:
+                        plt.colorbar()
+                
+                elif self.__dim == 3:
+                    ax={"xy":2, "xz":1, "yz":0, "zy":0, "zx":1, "yx":2, "x":0, "y":1, "z":2, 0:0, 1:1, 2:2}
+                    plt.title(title+f" @{axlabels[ax[args[0]]]}={args[1]}")
+                    axis=ax[args[0]]
+                    if axis == 0:
+                        plt.imshow(array[args[1]].T)
+                        plt.xlabel("y")
+                        plt.ylabel("z")
+                    elif axis == 1:
+                        plt.imshow(array[:,args[1]].T)
+                        plt.xlabel("x")
+                        plt.ylabel("z")
+                    elif axis == 2:
+                        plt.imshow(array[:,:,args[1]].T)
+                        plt.xlabel("x")
+                        plt.ylabel("y")
+                    else:
+                        raise ValueError("Invalid axis")
+                        return
+                    if colorbar:
+                        plt.colorbar()
+                else:
+                    raise ValueError("Invalid dimension")
+        
         else:
             raise ValueError(f"{field} is not a recognized array. Only e, mu and Z are known")
         plt.clf()
@@ -494,6 +577,29 @@ class Continuum(object):
         
         
         else:
+            if field=="sigma":
+                ax={"xy":2, "xz":1, "yz":0, "zy":0, "zx":1, "yx":2, "x":0, "y":1, "z":2, 0:0, 1:1, 2:2}
+                plt.title(title+f" @{axlabels[ax[args[0]]]}={args[1]}")
+                axis=ax[args[0]]
+                if axis == 0:
+                    plt.imshow(array[args[1]].T)
+                    plt.xlabel("y")
+                    plt.ylabel("z")
+                elif axis == 1:
+                    plt.imshow(array[:,args[1]].T)
+                    plt.xlabel("x")
+                    plt.ylabel("z")
+                elif axis == 2:
+                    plt.imshow(array[:,:,args[1]].T)
+                    plt.xlabel("x")
+                    plt.ylabel("y")
+                else:
+                    raise ValueError("Invalid axis")
+                    return
+                if colorbar:
+                    plt.colorbar()
+                return
+                
             atitle=""
             xl=None;yl=None
             axlabels={0:"x", 1:"y", 2:"z"} 
@@ -548,7 +654,7 @@ class Continuum(object):
             warnings.warn("Electromagnetic field is not rendered yet. You probably see graph of an empty field or previously rendered field")
         
         ax={"xy":2, "xz":1, "yz":0, "zy":0, "zx":1, "yx":2, "x":0, "y":1, "z":2, 0:0, 1:1, 2:2}
-        
+        axlabels={0:"x", 1:"y", 2:"z"}
         
         xl,yl="x","y"
         if field=="E":
@@ -557,7 +663,6 @@ class Continuum(object):
                 data=self.__E
                 title="E-Field"
             elif self.__dim==3:
-                axlabels={0:"x", 1:"y", 2:"z"}
                 title=f"E-Field @{axlabels[ax[args[0]]]}={args[1]}"
                 if ax[args[0]]==0:
                     data=self.__E[:,args[1]]
@@ -574,7 +679,7 @@ class Continuum(object):
                 title="H-Field"
                 data=self.__H
             elif self.__dim==3:
-                title=f"H-Field @{ax[args[0]]}={args[1]}"
+                title=f"H-Field @{axlabels[ax[args[0]]]}={args[1]}"
                 if ax[args[0]]==0:
                     data=self.__H[:,args[1]]
                     xl,yl="y","z"
@@ -583,6 +688,22 @@ class Continuum(object):
                     xl,yl="x","z"
                 elif ax[args[0]]==2:
                     data=self.__H[:,:,:,args[1]]
+                    
+        elif field=="J":
+            
+            if self.__dim==2:
+                title="J-Field"
+                data=self.__E*self.__sigma
+            elif self.__dim==3:
+                title=f"J-Field @{axlabels[ax[args[0]]]}={args[1]}"
+                if ax[args[0]]==0:
+                    data=self.__E[:,args[1]]*self.__sigma[args[1]]
+                    xl,yl="y","z"
+                elif ax[args[0]]==1:
+                    data=self.__E[:,:,args[1]]*self.__sigma[:,args[1]]
+                    xl,yl="x","z"
+                elif ax[args[0]]==2:
+                    data=self.__E[:,:,:,args[1]]*self.__sigma[:,:,args[1]]
 
         else:
             raise ValueError("Only E and H field can be displayed")
@@ -618,8 +739,27 @@ class Continuum(object):
                         fig.colorbar(img,ax=axarr[i])
                     
                 plt.show()
+                
+            elif field=="J":
+                fig, axarr=plt.subplots(1,3,figsize=(9,4))
+                fig.set_tight_layout("True")
+                
+                fig.suptitle(title)
+                
+                sub_heading={0:"x",1:"y",2:"z"}
+                for i in range(3):
+        
+                    img=axarr[i].imshow(data[i].T)
+                
+                    axarr[i].title.set_text(f"${field}_{sub_heading[i]}$")
+                    axarr[i].set_xlabel(xl)
+                    axarr[i].set_ylabel(yl)
+                    if colorbar:
+                        fig.colorbar(img,ax=axarr[i])
+                    
+                plt.show()
             
-        else:
+        else:                
             
             fig, axarr=plt.subplots(1,3,figsize=(12,4))
             fig.set_tight_layout("True")
@@ -673,26 +813,50 @@ class Continuum(object):
                 return ind
             
             start_time=time.time()
-            
-            for t in range(args[0]):
-                
-                self.__H+=pre_E()*Z_c2/self.__e
-                self.__E+=pre_H()*Z_c1/self.__mu
-                
-                
-                for energizer in self.__energizers:
-                    self.__E[:,energizer.location[0],energizer.location[1]]=energizer(t)
-                
-                self.__update_grid()
 
                 
-                if t%10==0:
-                    self.__create_progress_bar_with_ETA(start_time,t,args[0])
+            if self.__conductivity:
+                for t in range(args[0]):
+                    x=self.__sigma*self.__Jdt*self.__dt/2/e_0
                     
-                if obs:
-                    for i in range(n_obs):
-                        for ind in range(3):
-                            obs_array[t,i,ind]=self.__E[ind][args[1][i]]
+                    self.__H=self.__H *(1-x)/(1+x)+ pre_E()*Z_c2/self.__e/(1+x)
+                    self.__E+=pre_H()*Z_c1/self.__mu
+                    
+                    
+                    for energizer in self.__energizers:
+                        self.__E[:,energizer.location[0],energizer.location[1]]=energizer(t)
+                    
+                    self.__update_grid()
+
+                    
+                    if t%10==0:
+                        self.__create_progress_bar_with_ETA(start_time,t,args[0])
+                        
+                    if obs:
+                        for i in range(n_obs):
+                            for ind in range(3):
+                                obs_array[t,i,ind]=self.__E[ind][args[1][i]]
+            
+            else:
+                for t in range(args[0]):
+                    
+                    self.__H+=pre_E()*Z_c2/self.__e
+                    self.__E+=pre_H()*Z_c1/self.__mu
+                    
+                    
+                    for energizer in self.__energizers:
+                        self.__E[:,energizer.location[0],energizer.location[1]]=energizer(t)
+                    
+                    self.__update_grid()
+
+                    
+                    if t%10==0:
+                        self.__create_progress_bar_with_ETA(start_time,t,args[0])
+                        
+                    if obs:
+                        for i in range(n_obs):
+                            for ind in range(3):
+                                obs_array[t,i,ind]=self.__E[ind][args[1][i]]
 
         elif self.__dim==3:
             
@@ -730,28 +894,56 @@ class Continuum(object):
                 coord_E=self.__Jdt*Z_c1
                 coord_H=self.__Jdt*Z_c2
                 
-            for t in range(args[0]):
-                
-                if self.__anisotropy:
-                    self.__H+=np.einsum("klmij,jklm->iklm",self.__e_inv,pre_E())*coord_H
-                    self.__E+=np.einsum("klmij,jklm->iklm",self.__mu_inv,pre_H())*coord_E
-                else:
-                    self.__H+=pre_E()*self.__Jdt*Z_c2/self.__e
-                    self.__E+=pre_H()*self.__Jdt*Z_c1/self.__mu
+            
+            
+            if self.__conductivity:
+                for t in range(args[0]):
+                    x=self.__sigma*self.__Jdt*self.__dt/2/e_0
                     
-                
-                
-                for energizer in self.__energizers:
-                    self.__E[:,energizer.location[0],energizer.location[1],energizer.location[2]]=energizer(t)
-                
-                self.__update_grid()
-                
-                self.__create_progress_bar_with_ETA(start_time,t,args[0])
+                    if self.__anisotropy:
+                        self.__H=self.__H*(1-x)/(1+x)+np.einsum("klmij,jklm->iklm",self.__e_inv,pre_E())*coord_H/(1+x)
+                        self.__E+=np.einsum("klmij,jklm->iklm",self.__mu_inv,pre_H())*coord_E
+                    else:
+                        self.__H=self.__H*(1-x)/(1+x)+pre_E()*self.__Jdt*Z_c2/self.__e/(1+x)
+                        self.__E+=pre_H()*self.__Jdt*Z_c1/self.__mu
+                        
                     
-                if obs:
-                    for i in range(n_obs):
-                        for ind in range(3):
-                            obs_array[t,i,ind]=self.__E[ind][args[1][i]]
+                    
+                    for energizer in self.__energizers:
+                        self.__E[:,energizer.location[0],energizer.location[1],energizer.location[2]]=energizer(t)
+                    
+                    self.__update_grid()
+                    
+                    self.__create_progress_bar_with_ETA(start_time,t,args[0])
+                        
+                    if obs:
+                        for i in range(n_obs):
+                            for ind in range(3):
+                                obs_array[t,i,ind]=self.__E[ind][args[1][i]]
+            
+            else:
+                for t in range(args[0]):
+                    
+                    if self.__anisotropy:
+                        self.__H+=np.einsum("klmij,jklm->iklm",self.__e_inv,pre_E())*coord_H
+                        self.__E+=np.einsum("klmij,jklm->iklm",self.__mu_inv,pre_H())*coord_E
+                    else:
+                        self.__H+=pre_E()*self.__Jdt*Z_c2/self.__e
+                        self.__E+=pre_H()*self.__Jdt*Z_c1/self.__mu
+                        
+                    
+                    
+                    for energizer in self.__energizers:
+                        self.__E[:,energizer.location[0],energizer.location[1],energizer.location[2]]=energizer(t)
+                    
+                    self.__update_grid()
+                    
+                    self.__create_progress_bar_with_ETA(start_time,t,args[0])
+                        
+                    if obs:
+                        for i in range(n_obs):
+                            for ind in range(3):
+                                obs_array[t,i,ind]=self.__E[ind][args[1][i]]
                             
         if obs:
             return obs_array
