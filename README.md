@@ -26,6 +26,9 @@ pip install glimy
 
 <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/7.png" width="400">    <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/8.png" width="600">
 
+### ![Conductive Medium](https://github.com/alihakimtaskiran/Glimy/blob/main/examples/6-Lossy%20Medium.py)
+<img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/10.png" width="300"> <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/11.png" heigth="150"> <img src="https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/12.png" heigth="150">
+
 <hr>
 
 ### Tree
