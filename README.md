@@ -118,12 +118,12 @@ pip install glimy
   - **mu**: Mu of each point of the grid. Shape of the array is (Nx, Ny,...) in isotropic media; (3,Nx,Ny,Nz) in anisotopic media.
 ### view_structure(field="e",\*args,colorbar=True)
   You can view the grid structure
-  - **field** : It takes "e" for permittivity array, "mu" for permeability array and "Z" for impedance of the grid.
+  - **field** : It takes "e" for permittivity array, "mu" for permeability array, "sigma" for conductivity array and "Z" for impedance of the grid.
   - **\*args** : Only used in 3D. It used specify axis of view. Plane and and index number can be inserted. For example "z", 10 corresponds z=10 plane in the 3D array. "x","y","z" can be inserted. Also "yz", "xz", "xy" are synonym respectively.
   - **colorbar**: If is is set to **True**, colorbar is displayed.
 ### view_field(field="E",*args,colorbar=True)
   You can get graph of Electric or Magnetic Field.
-  - **field** : It takes "E" for electric field, "H" or magnetic field.
+  - **field** : It takes "E" for electric field, "H" or magnetic field and  "J" for current density field.
   - **\*args** : Only used in 3D. It used specify axis of view. Plane and and index number can be inserted. For example "z", 10 corresponds z=10 plane in the 3D array. "x","y","z" can be inserted. Also "yz", "xz", "xy" are synonym respectively.
   - **colorbar**: If is is set to **True**, colorbar is displayed.
 ### view_metric(field="t",*args,colorbar=True)
