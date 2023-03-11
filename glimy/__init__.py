@@ -541,7 +541,7 @@ class Continuum(object):
             title="$\mu$"
         elif field == "Z":
             array = self.__Z
-            title="Z"
+            title="|Z|"
         elif field == "sigma":
             if not self.__conductivity:
                 raise NotImplementedError("The Continuum doesn't contain any conductive object")
@@ -1116,7 +1116,16 @@ class Continuum(object):
     @property
     def __Z(self):
         if not self.__anisotropy:
-            return Z_0*np.sqrt(self.__mu/self.__e)
+            omega=self.__energizers[0].inf[4]*2*np.pi
+            if self.__conductivity and self.__conductivity_m:
+                return np.abs(Z_0*np.sqrt(self.__mu*(1-1j*self.__sigma_m/omega/self.__mu/mu_0)/self.__e*(1-1j*self.__sigma/omega/e_0/self.__e)))
+                
+            elif self.__conductivity and not self.__conductivity_m:
+                return np.abs(Z_0*np.sqrt(self.__mu/self.__e*(1-1j*self.__sigma/omega/e_0/self.__e)))
+            elif not self.__conductivity and self.__conductivity_m:
+                return np.abs(Z_0*np.sqrt(self.__mu*(1-1j*self.__sigma_m/omega/self.__mu/mu_0)/self.__e))
+            else:
+                return Z_0*np.sqrt(self.__mu/self.__e)
         else:
             return np.linalg.matrix_power(np.linalg.inv(self.__e) @ self.__mu,.5)
     
