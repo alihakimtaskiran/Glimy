@@ -118,7 +118,7 @@ pip install glimy
   - **mu**: Mu of each point of the grid. Shape of the array is (Nx, Ny,...) in isotropic media; (3,Nx,Ny,Nz) in anisotopic media.
 ### view_structure(field="e",\*args,colorbar=True)
   You can view the grid structure
-  - **field** : It takes "e" for permittivity array, "mu" for permeability array, "sigma" for conductivity array and "Z" for impedance of the grid.
+  - **field** : It takes "e" for permittivity array, "mu" for permeability array, "sigma" for conductivity array, "sigma_m" for magnetic conductivity array and "Z" for impedance of the grid.
   - **\*args** : Only used in 3D. It used specify axis of view. Plane and and index number can be inserted. For example "z", 10 corresponds z=10 plane in the 3D array. "x","y","z" can be inserted. Also "yz", "xz", "xy" are synonym respectively.
   - **colorbar**: If is is set to **True**, colorbar is displayed.
 ### view_field(field="E",*args,colorbar=True)
@@ -159,17 +159,18 @@ pip install glimy
   Adds a new **geo.Singular** object or tuple/list/set of them. If MassiveCluster is volatile, anything can't be added.
   - **arg** : **geo.Singular** object or tuple/list/set of them.
  
-  ## geo.PointCloud(points,layer=0,e=1,mu=1,sigma=0,time=None)
+  ## geo.PointCloud(points,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
   Creates a point cloud object in 2D or 3D. It infills inside the points. It is compatible with convex hull. Draw miscallenious objects(i.e. hexagon,star, hearth) with it. 
   - **points** : Points that defines convex full. It is a list, tuple or array of 2D or 3D points. Coordinates indicates # of cell in the grid. Like [(1,2), (2,3), (3,4)]. I needs at least 3 points in 2D, 4 points in 3D. 
   - **layer** : Priority of the object. It is an integer. The less **layer** value, the more prior the object. It is useful where you want to design object are overlapping like open access cavity dielectric waveguides.
   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **sigma** : Conductivity of the object. It may take float or int.
+  - **sigma_m** : Magnetic conductivity of the object. It may take float or int.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
   
-  ## geo.Rectangle(A, B, layer, e=1, mu=1, sigma=0, time=None)
+  ## geo.Rectangle(A, B, layer, e=1, mu=1, sigma=0,sigma_m=0, time=None)
   Creates a rectangle in 2D.
   - **A**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the Rectangle. It may take an integer. All units are # of grid cells.
@@ -177,9 +178,10 @@ pip install glimy
   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **sigma** : Conductivity of the object. It may take float or int.
+  - **sigma_m** : Magnetic conductivity of the object. It may take float or int.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
-  ## geo.Circle(A,r,layer,e=1,mu=1,sigma=0, time=None)
+  ## geo.Circle(A,r,layer,e=1,mu=1,sigma=0,sigma_m=0, time=None)
   Creates a circle in 2D.
   - **A** : Coordinates of center of the Circle. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the circle. It may take an integer. All units are # of grid cells.
@@ -187,9 +189,10 @@ pip install glimy
    - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **sigma** : Conductivity of the object. It may take float or int.
+  - **sigma_m** : Magnetic conductivity of the object. It may take float or int.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
 
-  ## geo.RectPrism(A, B, layer, e=1, mu=1,sigma=0, time=None)
+  ## geo.RectPrism(A, B, layer, e=1, mu=1,sigma=0,sigma_m=0, time=None)
  Creates a rectangular prism in 3D.
   - **A**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
   - **B**: One of non-connected vertex of the RectPrism. It may take an integer. All units are # of grid cells.
@@ -197,9 +200,10 @@ pip install glimy
   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **sigma** : Conductivity of the object. It may take float or int.
+  - **sigma_m** : Magnetic conductivity of the object. It may take float or int.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
-  ## geo.Sphere(C,r,layer=0,e=1,mu=1,sigma=0, time=None)
+  ## geo.Sphere(C,r,layer=0,e=1,mu=1,sigma=0,sigma_m=0, time=None)
   Creates a sphere in 3D.
   - **C** : Coordinates of center of the Sphere. It may take a tuple or list. All units are # of grid cells.
   - **r** : Radius of the sphere. It may take an integer. All units are # of grid cells.
@@ -207,9 +211,10 @@ pip install glimy
   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **sigma** : Conductivity of the object. It may take float or int.
+  - **sigma_m** : Magnetic conductivity of the object. It may take float or int.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations
   
-  ## geo.Cylinder(C,r,h,layer=0,e=1,mu=1,sigma=0, time=None)
+  ## geo.Cylinder(C,r,h,layer=0,e=1,mu=1,sigma=0,sigma_m=0, time=None)
  Creates a cylinder in 3D. Its planes are **parallel to xy-plane**
   - **C** : Coordinates of center of the Cylinder. It may take a tuple or list. All units are # of grid cells. Height signifies elongation though z axis.
   - **r** : Radius of the Cylinder. It may take an integer. All units are # of grid cells.
@@ -218,4 +223,5 @@ pip install glimy
   - **e** : Relative permittivity of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally, for researching Cherenkov Radiation, metamaterials etc.
   - **mu** : Relative permeability of the object. It may take float ot int for isotropic materials, 3×3 array/list/tuple for anisotropic materials. It is not restricted to be less than 1 intentionally.
   - **sigma** : Conductivity of the object. It may take float or int.
+  - **sigma_m** : Magnetic conductivity of the object. It may take float or int.
   - **time** : It determines in which time the object is seen and dissappear. If the object is eternal, <code>time=None</code>; otherwise <code>time=(start, stop)</code>, it is a list/tuple of start and stop durations.
