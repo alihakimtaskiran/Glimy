@@ -1,5 +1,5 @@
 from scipy.spatial import Delaunay
-from numpy import ndarray, array, zeros, pi, linalg, math
+from numpy import ndarray, array, zeros, linalg
 
 
 class SingularCelestial(object):
@@ -77,7 +77,7 @@ class MassiveCluster(object):
 
 
 class PointCloud(object):
-    def __init__(self, points, layer=0, e=1, mu=1, sigma=0., time=None):
+    def __init__(self, points, layer=0, e=1, mu=1, sigma=0.,sigma_m=0, time=None):
         
         if not isinstance(points, (list, tuple, ndarray)):
             raise TypeError("points must be a tuple, list or ndarray")
@@ -93,6 +93,9 @@ class PointCloud(object):
             
         if not isinstance(sigma, (float, int)):
             raise TypeError("sigma must be a float or int")
+            
+        if not isinstance(sigma_m, (float, int)):
+            raise TypeError("sigma_m must be a float or int")
             
         if not isinstance(time, (list, tuple)) and not time is None:
             raise TypeError("time must be a list, tuple or None(for eternity)")
@@ -143,6 +146,7 @@ class PointCloud(object):
 
         
         self.__sigma=sigma
+        self.__sigma_m=sigma_m
         self.__time=time
         self.__delaunay=Delaunay(points)
         self.__num_points=len(points)
@@ -178,7 +182,7 @@ class PointCloud(object):
     
     @property
     def info(self):
-        return self.__dim, self.__anisotropy, self.__layer, self.__delaunay, self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma
+        return self.__dim, self.__anisotropy, self.__layer, self.__delaunay, self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma, self.__sigma_m
 
     @property
     def eternity(self):
@@ -186,7 +190,7 @@ class PointCloud(object):
     
     @property
     def fielder(self):
-        return self.__e, self.__mu, self.__sigma
+        return self.__e, self.__mu, self.__sigma, self.__sigma_m
     
     @property
     def duration(self):
@@ -208,12 +212,16 @@ class PointCloud(object):
     def conductivity(self):
         return not (self.__sigma==0)
     
+    @property
+    def conductivity_m(self):
+        return not (self.__sigma_m==0)
+    
     def __repr__(self):
         return f"PointCloud-{self.__dim}D with {self.__num_points} points"
 
         
 class Rectangle(PointCloud):
-    def __init__(self, A, B, layer=0, e=1, mu=1, sigma=0., time=None):
+    def __init__(self, A, B, layer=0, e=1, mu=1, sigma=0.,sigma_m=0, time=None):
         
         if not isinstance(A, (tuple, list, ndarray)):
             raise TypeError("A must be a tuple or list")
@@ -234,11 +242,11 @@ class Rectangle(PointCloud):
             if not i>=0:
                 raise ValueError("Coordinates of B must be greater than 0")
                 
-        super().__init__((A, B,(A[0],B[1]),(B[0],A[1])),layer,e,mu,sigma,time)
+        super().__init__((A, B,(A[0],B[1]),(B[0],A[1])),layer,e,mu,sigma,sigma_m,time)
 
 
 class RectPrism(PointCloud):
-   def __init__(self, A, B, layer=0, e=1, mu=1, sigma=0., time=None):
+   def __init__(self, A, B, layer=0, e=1, mu=1, sigma=0.,sigma_m=0, time=None):
         if not isinstance(A, (tuple, list, ndarray)):
             raise TypeError("A must be a tuple, list or ndarray")
     
@@ -265,11 +273,11 @@ class RectPrism(PointCloud):
                 for k in A[2],B[2]:
                     hull.append((i,j,k))
          
-        super().__init__(hull,layer,e,mu,sigma,time)
+        super().__init__(hull,layer,e,mu,sigma,sigma_m,time)
 
 
 class Circle(object):
-    def __init__(self, A, r,layer=0, e=1, mu=1, sigma=0., time=None):
+    def __init__(self, A, r,layer=0, e=1, mu=1, sigma=0.,sigma_m=0, time=None):
         if not isinstance(A, (tuple, list)):
             raise TypeError("A(center) must be a tuple or list")
             
@@ -298,6 +306,9 @@ class Circle(object):
             
         if not isinstance(sigma, (float, int)):
             raise TypeError("sigma must be a float or int")
+            
+        if not isinstance(sigma_m, (float, int)):
+            raise TypeError("sigma_m must be a float or int")
             
         if not isinstance(time, (list, tuple)) and not time is None:
             raise TypeError("time must be a list, tuple or None(for eternity)")
@@ -347,6 +358,7 @@ class Circle(object):
                     raise ValueError(f"Anisotropic permeability tensor must be a n × n :\n{mu}")
         
         self.__sigma=sigma
+        self.__sigma_m=sigma_m
         self.__A=array(A)
         self.__r=r
         self.__layer=layer
@@ -374,7 +386,7 @@ class Circle(object):
     
     @property
     def info(self):
-        return self.__dim, self.__anisotropy, self.__layer, ("CIRCLE",self.__A, self.__r), self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma
+        return self.__dim, self.__anisotropy, self.__layer, ("CIRCLE",self.__A, self.__r), self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma, self.__sigma_m
 
     @property
     def eternity(self):
@@ -382,7 +394,7 @@ class Circle(object):
     
     @property
     def fielder(self):
-        return self.__e, self.__mu, self.__sigma
+        return self.__e, self.__mu, self.__sigma, self.__sigma_m
     
     @property
     def duration(self):
@@ -404,12 +416,16 @@ class Circle(object):
     def conductivity(self):
         return not (self.__sigma==0)
     
+    @property
+    def conductivity_m(self):
+        return not (self.__sigma_m==0)
+    
     def __repr__(self):
         return f"Circle with A={self.__A} , r={self.__r}"
     
     
 class Sphere(object):
-    def __init__(self, A, r,layer=0, e=1, mu=1, sigma=0., time=None):
+    def __init__(self, A, r,layer=0, e=1, mu=1, sigma=0.,sigma_m=0, time=None):
         if not isinstance(A, (tuple, list)):
             raise TypeError("A(center) must be a tuple or list")
             
@@ -438,6 +454,9 @@ class Sphere(object):
             
         if not isinstance(sigma, (float, int)):
             raise TypeError("sigma must be a float or int")
+            
+        if not isinstance(sigma_m, (float, int)):
+            raise TypeError("sigma_m must be a float or int")
             
         if not isinstance(time, (list, tuple)) and not time is None:
             raise TypeError("time must be a list, tuple or None(for eternity)")
@@ -488,6 +507,8 @@ class Sphere(object):
                     raise ValueError(f"Anisotropic permeability tensor must be a n × n :\n{mu}")
         
         self.__sigma=sigma
+        self.__sigma_m=sigma_m
+
         self.__A=array(A)
         self.__r=r
         self.__layer=layer
@@ -511,14 +532,14 @@ class Sphere(object):
     
     @property
     def info(self):
-        return self.__dim, self.__anisotropy, self.__layer, ("SPHERE",self.__A, self.__r), self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma
+        return self.__dim, self.__anisotropy, self.__layer, ("SPHERE",self.__A, self.__r), self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma, self.__sigma_m
     @property
     def eternity(self):
         return self.__eternity
     
     @property
     def fielder(self):
-        return self.__e, self.__mu, self.__sigma
+        return self.__e, self.__mu, self.__sigma, self.__sigma_m
     
     @property
     def duration(self):
@@ -540,12 +561,16 @@ class Sphere(object):
     def conductivity(self):
         return not (self.__sigma==0)
     
+    @property
+    def conductivity_m(self):
+        return not (self.__sigma_m==0)
+    
     def __repr__(self):
         return f"Sphere with A={self.__A}, r={self.__r}"
 
 
 class Cylinder(object):
-    def __init__(self, A, r, h, layer=0, e=1, mu=1, sigma=0., time=None):
+    def __init__(self, A, r, h, layer=0, e=1, mu=1, sigma=0.,sigma_m=0, time=None):
         if not isinstance(A, (tuple, list)):
             raise TypeError("A(center) must be a tuple or list")
             
@@ -581,6 +606,9 @@ class Cylinder(object):
         if not isinstance(sigma, (float, int)):
             raise TypeError("sigma must be a float or int")
             
+        if not isinstance(sigma_m, (float, int)):
+            raise TypeError("sigma_m must be a float or int")
+            
         if not isinstance(time, (list, tuple)) and not time is None:
             raise TypeError("time must be a list, tuple or None(for eternity)")
         
@@ -630,6 +658,8 @@ class Cylinder(object):
                     raise ValueError(f"Anisotropic permeability tensor must be a n × n :\n{mu}")
         
         self.__sigma=sigma
+        self.__sigma_m=sigma_m
+
         self.__A=A
         self.__r=r
         self.__r_2=r**2
@@ -655,14 +685,14 @@ class Cylinder(object):
     
     @property
     def info(self):
-        return self.__dim, self.__anisotropy, self.__layer, ("CYLINDER",self.__A, self.__r, self.__h, self.__axis), self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma
+        return self.__dim, self.__anisotropy, self.__layer, ("CYLINDER",self.__A, self.__r, self.__h, self.__axis), self.__e, self.__mu, self.__eternity, self.__time, self.__coverage, self.__sigma, self.__sigma_m
     @property
     def eternity(self):
         return self.__eternity
     
     @property
     def fielder(self):
-        return self.__e, self.__mu, self.__sigma
+        return self.__e, self.__mu, self.__sigma, self.__sigma_m
     
     @property
     def duration(self):
@@ -683,6 +713,10 @@ class Cylinder(object):
     @property
     def conductivity(self):
         return not (self.__sigma==0)
+    
+    @property
+    def conductivity_m(self):
+        return not (self.__sigma_m==0)
     
     def __repr__(self):
         return f"Cylinder with A={self.__A}, r={self.__r}, h={self.__h}"
