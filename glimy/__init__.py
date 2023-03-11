@@ -1,7 +1,7 @@
 print("Interacting with reality...")
 import numpy as np
 import sys
-import Glimy.geo
+import glimy.geo
 
 import warnings
 import time
@@ -379,6 +379,9 @@ class Continuum(object):
         self.__built_once=True
         self.__built_isotropic=self.__anisotropy
         self.__grid_generator_at_t_0()
+        
+        if self.__anisotropy and (self.__conductivity or self.__conductivity_m):
+            raise NotImplementedError("Both conductive and anisotropic materials are not permitted.")
         self.__instance=0
 
         self.__E=np.zeros((3,)+self.__grid_size)
