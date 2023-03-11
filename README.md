@@ -12,7 +12,7 @@ pip install glimy
 -  Electromagnetic waves in dielectric and magnetic materials.
 -  Gravitational effect on electromagnetism
 -  Anisotropic materials
--  Lossy medium and conductive materials
+-  Lossy medium and conductive materials(both electric and magnetic)
 -  Objects can be inserted and omitted through the time
 ### ![Strong Gravitational Potential](examples/2-Near-Massive-Object.py)
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/5.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/6.png)
@@ -70,27 +70,27 @@ pip install glimy
                         |
                         |
                         |----PointCloud(object)-----------|
-                        |                                 |---__init__(points,layer=0,e=1,mu=1,sigma=0,time=None)
+                        |                                 |---__init__(points,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
                         |
                         |
                         |----Rectangle(PointCloud)--------|
-                        |                                 |---__init__(A,B,layer=0,e=1,mu=1,sigma=0,time=None)
+                        |                                 |---__init__(A,B,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
                         |
                         |
                         |----RectPrism(PointCloud)--------|
-                        |                                 |---__init__(A,B,layer=0,e=1,mu=1,sigma=0,time=None)
+                        |                                 |---__init__(A,B,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
                         |
                         |
                         |----Circle(object)---------------|
-                        |                                 |---__init__(A,r,layer=0,e=1,mu=1,sigma=0,time=None)
+                        |                                 |---__init__(A,r,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
                         |
                         |
                         |----Sphere(object)---------------|
-                        |                                 |---__init__(A,r,layer=0,e=1,mu=1,sigma=0,time=None)
+                        |                                 |---__init__(A,r,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
                         |
                         |
                         |----Cylinder(object)-------------|
-                                                          |---__init__(A,r,h,layer=0,e=1,mu=1,sigma=0,time=None)
+                                                          |---__init__(A,r,h,layer=0,e=1,mu=1,sigma=0,sigma_m=0,time=None)
           
   </pre>
   
