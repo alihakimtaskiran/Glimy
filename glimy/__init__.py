@@ -1020,8 +1020,8 @@ class Continuum(object):
             for t in range(args[0]):
                     
                 if self.__anisotropy:
-                    self.__H+=np.einsum("klmij,jklm->iklm",self.__e_inv,pre_E())*coord_H
-                    self.__E+=np.einsum("klmij,jklm->iklm",self.__mu_inv,pre_H())*coord_E
+                    self.__H+=np.einsum("klmij,jklm->iklm",self.__mu_inv,pre_E())*coord_H
+                    self.__E+=np.einsum("klmij,jklm->iklm",self.__e_inv,pre_H())*coord_E
                 else:
                     if self.__conductivity_m:
                         self.__H=self.__H*(1-self.__sigma_mux)/(1+self.__sigma_mux)+pre_E()*self.__Jdt*Z_c2/self.__mu/(1+self.__sigma_mux)
