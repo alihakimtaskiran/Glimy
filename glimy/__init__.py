@@ -461,7 +461,7 @@ class Continuum(object):
         print(f"\r[{bar}] {progress}% - ETA:{ETA} - {current_step}/{total_steps}-------------",end="")
         sys.stdout.flush()
 
-    def impose_grid(self, e, mu, anisotropy=(False,False)):
+    def impose_grid(self, e, mu, sigma=False, sigma_m=False, anisotropy=(False,False)):
         if anisotropy[0]:
             if e.shape[:-1]!=self.__grid_size:
                 raise ValueError(f"Grid size of the Continuum and imposed e-grid must be match:\nContinuum is {self.__grid_size}")
@@ -473,6 +473,25 @@ class Continuum(object):
                 raise ValueError(f"Grid size of the Continuum and imposed e-grid must be match:\nContinuum is {self.__grid_size}\nIf anisotropic e-grid imposed, then select True in anisotropy flag")
             self.__e=e
             
+        if (sigma_m is not False or sigma is not False) and (anisotropy[0] or anisotropy[1]):
+            raise NotImplementedError("Anisotropy and conductivity is not unified yet.")
+        
+        if sigma is not False:
+            if sigma.shape!=self.__grid_size:
+                    raise ValueError(f"Grid size of the Continuum and imposed sigma-grid must be match:\nContinuum is {self.__grid_size}")
+            else:
+                self.__sigma=sigma
+                self.__conductivity=True
+                
+        if sigma_m is not False:
+            if sigma_m.shape!=self.__grid_size:
+                    raise ValueError(f"Grid size of the Continuum and imposed sigma_m-grid must be match:\nContinuum is {self.__grid_size}")
+            else:
+                self.__sigma_m=sigma_m
+                self.__conductivity_m=True
+
+
+        
         if anisotropy[1]:
             if mu.shape[:-1]!=self.__grid_size:
                 raise ValueError(f"Grid size of the Continuum and imposed mu-grid must be match:\nContinuum is {self.__grid_size}")
