@@ -57,6 +57,7 @@ class Continuum(object):
         self.__instance=0
         
         self.__bound=None
+        self.__bound_bool=False
         self.__rendered=False
         
 
@@ -68,7 +69,7 @@ class Continuum(object):
             for element in arg:
                 self.add(element)
         else:
-            if isinstance(arg, (geo.SingularCelestial, geo.MassiveCluster, geo.PointCloud, geo.Rectangle, geo.RectPrism, geo.Circle, geo.Sphere, geo.Cylinder, DotSource)):
+            if isinstance(arg, (geo.SingularCelestial, geo.MassiveCluster, geo.PointCloud, geo.Rectangle, geo.RectPrism, geo.Circle, geo.Sphere, geo.Cylinder, DotSource, Boundaries)):
                 if arg.dimensionality!=self.__dim:
                     raise ValueError(f"# of dimensions of Continuum and added object must match:\n{arg}")
                 self.__objects.append(arg)
@@ -106,6 +107,10 @@ class Continuum(object):
             elif __ in {DotSource}:
                 element.set_dt(self.__dt)
                 self.__energizers.append(element)
+                
+            elif __==Boundaries:
+                self.__bound=element()
+                self.__bound_bool=True
 
 
     def __gravitonics(self):
@@ -994,6 +999,23 @@ class Continuum(object):
                     for i in range(n_obs):
                         for ind in range(3):
                             obs_array[t,i,ind]=self.__E[ind][args[1][i]]
+                            
+                if self.__bound_bool:
+                    if self.__bound[2]==1:
+                        self.__E[2,:,0]=-self.__E[2,:,1]
+                        self.__H[0,:,0]=-self.__H[0,:,1]
+                    
+                    if self.__bound[3]==1:
+                        self.__E[2,:,-1]=-self.__E[2,:,-2]
+                        self.__H[0,:,-2]=-self.__H[0,:,-3]
+                        
+                    if self.__bound[1]==1:
+                        self.__E[2,-1]=-self.__E[2,-2]
+                        self.__H[1,-2]=-self.__H[1,-3]
+                        
+                    if self.__bound[0]==1:
+                        self.__E[2,0]=-self.__E[2,1]
+                        self.__H[1,0]=-self.__H[1,1]
 
 
 
@@ -1035,7 +1057,6 @@ class Continuum(object):
                 
             
             
-
             for t in range(args[0]):
                     
                 if self.__anisotropy:
@@ -1066,6 +1087,38 @@ class Continuum(object):
                     for i in range(n_obs):
                         for ind in range(3):
                             obs_array[t,i,ind]=self.__E[ind][args[1][i]]
+                            
+        
+                if self.__bound_bool:
+                    # Boundaries in the x-direction
+                    if self.__bound[0] == 1:
+                        self.__E[:, 0, :, :] = self.__E[:, 1, :, :]
+                        self.__H[:, 0, :, :] = self.__H[:, 1, :, :]
+                
+                    if self.__bound[1] == 1:
+                        self.__E[:, -2, :, :] = -self.__E[:, -3, :, :]
+                        self.__H[:, -2, :, :] = -self.__H[:, -3, :, :]
+                
+                    # Boundaries in the y-direction
+                    if self.__bound[2] == 1:
+                        self.__E[:, :, 0, :] = self.__E[:, :, 1, :]
+                        self.__H[:, :, 0, :] = self.__H[:, :, 1, :]
+                
+                    if self.__bound[3] == 1:
+                        self.__E[:, :, -2, :] = -self.__E[:, :, -3, :]
+                        self.__H[:, :, -2, :] = -self.__H[:, :, -3, :]
+                
+                    # Boundaries in the z-direction
+                    if self.__bound[4] == 1:
+                        self.__E[:, :, :, 0] = self.__E[:, :, :, 1]
+                        self.__H[:, :, :, 0] = self.__H[:, :, :, 1]
+
+                
+                    if self.__bound[5] == 1:
+                        self.__E[:, :, :, -2] = -self.__E[:, :, :, -3]
+                        self.__H[:, :, :, -2] = -self.__H[:, :, :, -3]
+
+
                             
         if obs:
             return obs_array
@@ -1169,8 +1222,10 @@ class Continuum(object):
         return np.sum(self.__E)+np.sum(self.__H)
 
 
+
+
 class DotSource(object):
-    def __init__(self, location, presence ,amplitude, frequency,phase=0):
+    def __init__(self, location, presence, amplitude, frequency, E=(0,0,1), phase=0):
         if not isinstance(location, (tuple, list, np.ndarray)):
             raise TypeError(f"location must be a tuple, list or ndarray:\n{location}")
         
@@ -1186,9 +1241,15 @@ class DotSource(object):
         if not isinstance(phase, (int, float)):
             raise TypeError(f"phase must be an int or float:\n{phase}")
             
+        if not isinstance(E, (tuple, list, np.ndarray)):
+            raise TypeError(f"E-field vector direction must be a tuple, list or ndarray:\n{location}")
+            
 
         if len(presence)!=2:
             raise ValueError(f"presence must contain two elements, start and stop:\n{presence}")
+        
+        if len(E)!=3:
+            raise ValueError("E-field vector direction must contain 3 elements")
         
 
         self.__location=tuple(location)
@@ -1199,6 +1260,8 @@ class DotSource(object):
         self.__phase=phase%np.pi
         self.__presence=presence
         self.__dim=len(location)
+        
+        self.__E=np.array(E)
 
         
     def __repr__(self):
@@ -1229,6 +1292,94 @@ class DotSource(object):
     
     def __call__(self, t):
         if self.__presence[0]<=t<=self.__presence[1]:
-            return 0,0,np.sin(self.__omega_dt * t + self.__phase)
+            return self.__E*np.sin(self.__omega_dt * t + self.__phase)
         else:
-            return 0
+            return 0,0,0
+
+
+
+
+class Boundaries(object):
+    def __init__(self, subject_grid_dim, all_bound="ABC"):
+        self.__op_dict={"PEC":0, "ABC":1, "PBC":2}
+        if not subject_grid_dim in {2,3}:
+            raise ValueError("# dimensions in the subject grid must be 2 or 3")
+
+        
+        if subject_grid_dim==3:
+            self.__ultimate_functions=[None]*6#L,R,B,F,D,U
+        
+        else:
+            self.__ultimate_functions=[None]*4#L,R,B,F
+        self.__dim=subject_grid_dim
+        
+        
+        
+        if all_bound:
+            
+            if self.__validator(all_bound):
+                self.__ultimate_functions[:4]=[self.__op_dict[all_bound]]*4
+                if self.__dim==3:
+                    self.__ultimate_functions[4:6]=[self.__op_dict[all_bound]]*2
+         
+            
+    def __call__(self):
+        if None in self.__ultimate_functions:
+            raise NotImplementedError("Some boundaries are not defined. Make sure that all of them are defined")
+        
+        for i in range(self.__dim):
+            if (self.__ultimate_functions[2*i]=="PBC" and self.__ultimate_functions[2*i+1]!="PBC") or (self.__ultimate_functions[2*i]!="PBC" and self.__ultimate_functions[2*i+1]=="PBC"):
+                raise ValueError("Opposite boundary surfaces must be shared periodically")
+        
+        return tuple(self.__ultimate_functions)
+        
+    
+    def L(self, boundary_type="ABC"):
+        self.__validator(boundary_type)
+        self.__ultimate_functions[0]=self.__op_dict[boundary_type]
+        if boundary_type=="PBC":
+            self.__ultimate_functions[1]=self.__op_dict[boundary_type]
+                
+    
+    def R(self, boundary_type="ABC"):
+        self.__validator(boundary_type)
+        self.__ultimate_functions[1]=self.__op_dict[boundary_type]
+        if boundary_type=="PBC":
+            self.__ultimate_functions[0]=self.__op_dict[boundary_type]
+    
+    def B(self, boundary_type="ABC"):
+        self.__validator(boundary_type)
+        self.__ultimate_functions[2]=self.__op_dict[boundary_type]
+        if boundary_type=="PBC":
+            self.__ultimate_functions[3]=self.__op_dict[boundary_type]
+    
+    def F(self, boundary_type="ABC"):
+        self.__validator(boundary_type)
+        self.__ultimate_functions[3]=self.__op_dict[boundary_type]
+        if boundary_type=="PBC":
+            self.__ultimate_functions[2]=self.__op_dict[boundary_type]
+    
+    def D(self, boundary_type="ABC"):
+        if self.__dim==2:
+            raise NotImplementedError("Employing a 3D operation in 2D impossible")
+        self.__validator(boundary_type)
+        self.__ultimate_functions[4]=self.__op_dict[boundary_type]
+        if boundary_type=="PBC":
+            self.__ultimate_functions[5]=self.__op_dict[boundary_type]
+    
+    def U(self, boundary_type="ABC"):
+        if self.__dim==2:
+            raise NotImplementedError("Employing a 3D operation in 2D impossible")
+        self.__validator(boundary_type)
+        self.__ultimate_functions[5]=self.__op_dict[boundary_type]
+        if boundary_type=="PBC":
+            self.__ultimate_functions[4]=self.__op_dict[boundary_type]
+    
+    @staticmethod       
+    def __validator(inn):
+        if inn not in {"ABC","PEC"}:
+            raise ValueError("boundary type must be ABC, PBC or PEC.\nBoundary Types:\nPEC(Perfect Electric Conductor): Reflects all waves perfectly\nABC(Absorbing Boundary Conditions): Absorbs all waves.\n")
+        return True
+    @property
+    def dimensionality(self):
+        return self.__dim
