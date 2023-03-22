@@ -165,13 +165,14 @@ pip install glimy
    PEC (Perfect Electric Conductor): Reflects all waves perfectly
    ABC (Absorbing Boundary Conditions): Absorbs all waves
    
-  -L(self, boundary_type="ABC"): Sets the left boundary condition.
-  -R(self, boundary_type="ABC"): Sets the right boundary condition.
-  -B(self, boundary_type="ABC"): Sets the backward boundary condition.
-  -F(self, boundary_type="ABC"): Sets the forward boundary condition.
-  -D(self, boundary_type="ABC"): Sets the down boundary condition (for 3D grids only).
-  -U(self, boundary_type="ABC"): Sets the up boundary condition (for 3D grids only).
-  A short example: <code>
+  - L(self, boundary_type="ABC"): Sets the left boundary condition.
+  - R(self, boundary_type="ABC"): Sets the right boundary condition.
+  - B(self, boundary_type="ABC"): Sets the backward boundary condition.
+  - F(self, boundary_type="ABC"): Sets the forward boundary condition.
+  - D(self, boundary_type="ABC"): Sets the down boundary condition (for 3D grids only).
+  - U(self, boundary_type="ABC"): Sets the up boundary condition (for 3D grids only).
+  A short example:
+  <code>
   boundaries = Boundaries(3)  # Creates a 3D grid with default ABC boundaries
   boundaries.L("PEC")  # Sets the left boundary to PEC
   boundaries.R("PEC")  # Sets the right boundary to PEC
