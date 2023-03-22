@@ -52,7 +52,17 @@ pip install glimy
 |                         |---inf()
 |
 |
-| 
+|----Boundaries(object)----|
+|                          |---__init__(subject_grid_dim, all_bound="ABC")
+|                          |---L(boundary_type="ABC")
+|                          |---R(boundary_type="ABC")
+|                          |---B(boundary_type="ABC")
+|                          |---F(boundary_type="ABC")
+|                          |---D(boundary_type="ABC")
+|                          |---U(boundary_type="ABC")
+|
+|
+|
 |----geo(module)--------|
                         |----SingularCelestial(object)----|
                         |                                 |---__init__(location,mass)
@@ -149,6 +159,18 @@ pip install glimy
    - **amplitude** : Amplitude of the wave. It may take int or float.
    - **frequency** : Frequency of the wave. It may take int or float.
    - **phase** : Phase of the wave. It may take int or float. It is default 0.
+
+  ## Boundaries(subject_grid_dim, all_bound="ABC")
+  The Boundaries class allows users to define boundary conditions for the grid in 2D or 3D space. There are two supported boundary types:
+   PEC (Perfect Electric Conductor): Reflects all waves perfectly
+   ABC (Absorbing Boundary Conditions): Absorbs all waves
+   
+  -L(self, boundary_type="ABC"): Sets the left boundary condition.
+  -R(self, boundary_type="ABC"): Sets the right boundary condition.
+  -B(self, boundary_type="ABC"): Sets the backward boundary condition.
+  -F(self, boundary_type="ABC"): Sets the forward boundary condition.
+  -D(self, boundary_type="ABC"): Sets the down boundary condition (for 3D grids only).
+  -U(self, boundary_type="ABC"): Sets the up boundary condition (for 3D grids only).
   
   ## geo.SingularCelestial(location, mass):
    Creates a point mass.
