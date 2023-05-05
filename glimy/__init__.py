@@ -122,7 +122,7 @@ class Continuum(object):
                 __+=m/np.linalg.norm(l-x*self.__ds)
             return __
 
-        self.__Jdt=1/np.sqrt(1+g_c_2*np.fromfunction(np.vectorize(gp), self.__grid_size, dtype=float))
+        self.__Jdt=1/(1+g_c_2*np.fromfunction(np.vectorize(gp), self.__grid_size, dtype=float))
         
 
     def __emo_video_creator(self):
