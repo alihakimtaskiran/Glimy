@@ -14,6 +14,7 @@ pip install glimy
 -  Anisotropic materials
 -  Lossy medium and conductive materials(both electric and magnetic)
 -  Objects can be inserted and omitted through the time
+-  Can be integrated into GPT-4
 ### ![Strong Gravitational Potential](examples/2-Near-Massive-Object.py)
 ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/5.png)     ![](https://github.com/alihakimtaskiran/Glimy-FDTD/raw/main/src/6.png)
 
