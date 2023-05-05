@@ -108,7 +108,7 @@ pip install glimy
   # Documentation
   <hr/>
   
-  ## Continuum(dim,grid_size,ds)
+  ## Continuum(grid_size,ds)
    Creates electromagnetic field with given dimensions and grid size. Grid spacing is introduced with ds.
    - **grid_size** : Defines grid cell count per axis. It may take a tuple or list. It's 2D or 3D.
    - **ds** : Length of a edge of a grid cell. It may take a float or integer. **All units are SI**.
