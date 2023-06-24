@@ -9,7 +9,7 @@
 <pre>
 pip install glimy
 </pre>
-### GPU-only
+### GPU-enabled
 Make sure that Nvidia drivers and CUDA is successfully installed. Then proceed with installing cupy.
 
 See ![GPU usage example](https://github.com/alihakimtaskiran/Glimy/blob/main/examples/7-GPU.py)
