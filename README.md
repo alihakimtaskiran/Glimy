@@ -5,10 +5,18 @@
   The electromagnetic field.. Interacts with our reality and the reason that we continue to live. We can live beter, if we know time evolution of electromagnetic field. 
   Moreover, Glimy can simulate behaviour of light near massive objects(i.e neutron stars, blackholes). It utilizes VSL Theory of **Mach-Einstein-Dicke**.
   Glimy can simulate photonic devices with varying refractive index through time.
+### CPU-only
 <pre>
 pip install glimy
 </pre>
+### GPU-only
+Make sure that Nvidia drivers and CUDA is successfully installed. Then proceed with installing cupy.
+<pre>
+pip install cupy # See https://docs.cupy.dev/en/stable/install.html#installing-cupy for more information
+pip install glimy
+</pre>
 ## Capabilities
+-  GPU Support(install **cupy** to access GPU resources)
 -  Electromagnetic waves in dielectric and magnetic materials.
 -  Gravitational effect on electromagnetism
 -  Anisotropic materials
@@ -39,7 +47,7 @@ pip install glimy
 |                         |---add(arg)
 |                         |---export_grid()
 |                         |---export_field()
-|                         |---build(verbose=1)
+|                         |---build(verbose=1,gpu_flag=False)
 |                         |---impose_grid(e,mu,sigma=False,sigma_m=False,anisotropy=(False,False))
 |                         |---view_(field="t",*args,colorbar=True)
 |                         |---view_structure(field="e",*args,colorbar=True)
@@ -116,9 +124,10 @@ pip install glimy
 ### add(arg)
   Adds either new geometries, celestial objects and sources into the Continuum.
   - **arg** : It adds new objects into the grid. It can take either defined object or list/tuple of them(recursively). It can take tuple, list, set, everything in **geo**(**geo.\***) and **DotSource**. As long as dimensionality of object and Continuum is the same, it is added.
-### build(verbose=1)
+### build(verbose=1, gpu_flag=False)
    Builds the dielectric, magnetic and geometrodynamic structure. 
    - **verbose**: Determines whether info is displayed. If 0, nothing displayed. If 1, render time is displayed.
+   - **gpu_flag**: Determines whether the grid is compiled for GPU.
 ### export_field()
   Get Electric and Magnetic Field arrays. It returns a tuple (E, H).
 ### export_grid()
@@ -148,7 +157,7 @@ pip install glimy
 ### Render(time_steps,backend="numpy",observers=None)
    Executes FDTD calculations on a Continuum object.
    - **time_steps** : It is number of time steps that field will evolve. It may take an integer. Lenght of time steps is given by ds/c/(<span>&#8730;</span>dim) ; where ds is grid spacing, c is speed of light and dim is number of dimensions of the grid. All units are SI.
-   - **backend** : It sets the backend. Only **numpy** is supported recently. Therefore it is always **numpy**
+   - **backend** : It sets the backend. For CPU-only version, use **backend="numpy"**. IF GPU is enabled, then use **backend=cupy**. Make sure that the Continuum instance was built with gpu_flag=1 for accessing GPU acceleration.
    - **observers** : Determines whether time dependent logging will be the case. If it is set to <code>None</code>, time dependent observation is not the case. However, it is a tuple or list of points e.g <code>[ (0,0), (2,2) ]</code> then it returns E-field amplitude of each given point. Returned array's order is the same as implicit order of the fed list/tuple.
 <hr/> 
 
