@@ -1,4 +1,4 @@
-import Glimy as glimy
+import glimy
 
 conduct=glimy.geo.RectPrism((10,10,10),(100,50,100),e=1,sigma=7000)
 grid=glimy.Continuum((100,100,100),5e-8)
