@@ -18,9 +18,10 @@ Glimy’s object-oriented design allows for easy integration of various componen
 ### add(arg)
   Adds either new geometries, celestial objects and sources into the Continuum.
   - **arg** : It adds new objects into the grid. It can take either defined object or list/tuple of them(recursively). It can take tuple, list, set, everything in **geo**(**geo.\***) and **DotSource**. As long as dimensionality of object and Continuum is the same, it is added.
-### build(verbose=1)
+### build(verbose=1, gpu_flag=False)
    Builds the dielectric, magnetic and geometrodynamic structure. 
    - **verbose**: Determines whether info is displayed. If 0, nothing displayed. If 1, render time is displayed.
+   - **gpu_flag**: Determines whether the grid is compiled for GPU.
 ### export_field()
   Get Electric and Magnetic Field arrays. It returns a tuple (E, H).
 ### export_grid()
@@ -50,11 +51,9 @@ Glimy’s object-oriented design allows for easy integration of various componen
 ### Render(time_steps,backend="numpy",observers=None)
    Executes FDTD calculations on a Continuum object.
    - **time_steps** : It is number of time steps that field will evolve. It may take an integer. Lenght of time steps is given by ds/c/(<span>&#8730;</span>dim) ; where ds is grid spacing, c is speed of light and dim is number of dimensions of the grid. All units are SI.
-   - **backend** : It sets the backend. Only **numpy** is supported recently. Therefore it is always **numpy**
+   - **backend** : It sets the backend. For CPU-only version, use **backend="numpy"**. IF GPU is enabled, then use **backend=cupy**. Make sure that the Continuum instance was built with gpu_flag=1 for accessing GPU acceleration.
    - **observers** : Determines whether time dependent logging will be the case. If it is set to <code>None</code>, time dependent observation is not the case. However, it is a tuple or list of points e.g <code>[ (0,0), (2,2) ]</code> then it returns E-field amplitude of each given point. Returned array's order is the same as implicit order of the fed list/tuple.
-<hr/> 
-
-
+<hr>
   ## DotSource(location,presence,amplitude,frequency,phase=0)
    Creates a point source on a given place on grid, through given time interval with given amplitude, frequency and phase.
    - **location** : It is location of dot source. It may take a list or tuple. 
@@ -81,7 +80,6 @@ Glimy’s object-oriented design allows for easy integration of various componen
   boundaries.R("PEC")  # Sets the right boundary to PEC
   </code>
 
-  
   ## geo.SingularCelestial(location, mass):
    Creates a point mass.
    - **location** : Sets the location of point mass. Unit is **meters**. It may take tuple, list or np.array. It must bu in form of N-tuple. It may be outside of the grid.
